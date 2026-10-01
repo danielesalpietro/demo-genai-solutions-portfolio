@@ -1,0 +1,33 @@
+﻿apiVersion: ape.demo/v1
+kind: Demo
+metadata:
+  name: private-rag
+  title: Private RAG — Enterprise Knowledge Assistant
+spec:
+  category: retrieval-augmented-generation
+  lifecycle: experimental
+  maturity: alpha
+  entrypoints:
+    start: ./demo.sh start
+    run: ./demo.sh run
+    test: ./test.sh
+    reset: ./reset.sh
+  security:
+    privilegedContainers: false
+    defaultCredentialsAllowed: false
+    secretsFromEnvironment: true
+  requirements:
+    docker: ">= 27"
+    compose: ">= 2.30"
+    memoryGB: 12
+    diskGB: 40
+    gpuRequired: false
+  ports:
+    - 3000
+    - 11434
+    - 6333
+    - 6334
+  validation:
+    composeConfig: true
+    healthChecks: true
+    smokeTest: true
