@@ -1,4 +1,4 @@
-# APE Demo Factory
+# Self-contained Generative AI solution demos
 
 Public, agent-ready repository for self-contained Docker Compose demonstrations.
 
