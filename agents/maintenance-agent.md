@@ -46,3 +46,8 @@ The Maintenance Agent must use these Issue labels when opening automated Issues:
 - Must not close or dismiss security alerts without human approval.
 - Issues must include the specific finding, affected demo, and a suggested remediation.
 - Demo decommissioning (lifecycle change to `deprecated` or `archived`) requires a human decision.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_maintenance-agent.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_maintenance-agent.md` and commit with message `chore(maintenance-agent): logbook update — <summary>`.

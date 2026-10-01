@@ -30,3 +30,8 @@ Additional documents:
 - No hardcoded credentials or real email addresses.
 - Expected output blocks must match what `demo.sh run` actually produces.
 - Must not copy-paste content from upstream project documentation without attribution and license review.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_docs-writer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_docs-writer.md` and commit with message `chore(docs-writer): logbook update — <summary>`.

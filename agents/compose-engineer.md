@@ -32,3 +32,8 @@ image: name:latest
 
 - Must run `docker compose config --quiet` and confirm it exits 0.
 - Must not introduce host path mounts without a documented security exception approved by a human maintainer.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_compose-engineer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_compose-engineer.md` and commit with message `chore(compose-engineer): logbook update — <summary>`.

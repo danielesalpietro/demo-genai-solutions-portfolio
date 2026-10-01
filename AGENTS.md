@@ -79,3 +79,61 @@ Each `demo.sh` must support: `check`, `start`, `run`, `status`, `stop`, and `res
 ## Escalation
 
 Stop and request maintainer review when a change involves credentials, licenses, public exposure, privileged execution, customer data, breaking changes, new external services, or unresolved security findings.
+
+---
+
+## Multi-session protocol
+
+Complex work is coordinated across Claude Code sessions via the Supervisor Agent.
+
+### Roles and session types
+
+| Session type | Activated by | How |
+|---|---|---|
+| Supervisor | Operator | Open Claude Code in repo root → `/supervisor` |
+| Specialist (local) | Operator (on Supervisor request) | Open Claude Code in repo root → `/remote-control <handoff>` |
+| Remote operative | Operator (on Supervisor request) | Open Claude Code CLI on target system → `/remote-control <handoff>` |
+
+Slash commands are defined in `.claude/agents/`.
+
+### Communication model
+
+```
+Supervisor writes agents/handoffs/handoff_<role>_<date>_<NNN>.md
+  └→ Operator activates session on appropriate system
+       └→ Remote session reads handoff, executes, writes .result.md + logbook
+            └→ Supervisor reads result on next activation
+```
+
+The Supervisor outputs a **REMOTE SESSION NEEDED** or **SPECIALIST SESSION NEEDED** block whenever a handoff is ready, with the exact activation command for the operator.
+
+### Handoff files
+
+`agents/handoffs/` — task briefs and results. See `agents/handoff.template.md`.  
+Never store credential values in handoff files. Credentials are passed in-session by the operator.
+
+### Logbooks
+
+`agents/logbooks/logbook_<role>.md` — append-only session memory per role.  
+Every session reads its logbook at start and appends an entry at the end.  
+Template: `agents/logbook.template.md`.
+
+### Credential handling in remote sessions
+
+- The handoff lists what is needed (env var name, key path hint) — not the value.
+- The operator provides actual values when activating the remote session.
+- Values are never written to any file or committed.
+- For encrypted password files, the operator runs `scripts/manage-credentials.sh` on the target system.
+
+### Remote operative roles
+
+These roles are only activated for tasks that require direct system access:
+
+| Role | Use case |
+|---|---|
+| `linux-agent` | Ubuntu/Debian server config, systemd, package install, docker setup |
+| `windows-agent` | Windows Server config, IIS, registry, PowerShell remoting |
+| `firewall-agent` | UFW / iptables / cloud security group rules |
+| `network-agent` | DNS, VPC routing, load balancer config |
+
+Remote operative sessions have MCP access only to the local system tools on their target machine. They do not have GitHub write access unless the operator explicitly provides a token.

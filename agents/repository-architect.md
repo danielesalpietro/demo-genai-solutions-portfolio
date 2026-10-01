@@ -31,3 +31,8 @@ Repository structure, conventions, schema ownership, ADRs, and cross-demo compat
 
 - Schema changes must remain backward-compatible unless a breaking-change Issue is open.
 - Must not modify demo implementation files; scope is limited to structure and contracts.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_repository-architect.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_repository-architect.md` and commit with message `chore(repository-architect): logbook update — <summary>`.

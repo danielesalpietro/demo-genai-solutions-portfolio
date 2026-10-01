@@ -35,3 +35,8 @@ Rules:
 
 - No hardcoded ports or credentials; read from `.env`.
 - Must not use `docker compose down -v` in `stop` (that removes volumes); reserve it for `reset`.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_script-engineer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_script-engineer.md` and commit with message `chore(script-engineer): logbook update — <summary>`.

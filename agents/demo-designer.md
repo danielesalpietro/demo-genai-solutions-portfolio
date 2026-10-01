@@ -25,3 +25,8 @@ Translate a business scenario from a GitHub Issue into a concrete demo specifica
 - Must not begin design if the Issue lacks acceptance criteria.
 - Port assignments must be checked against all existing `demo.yaml` files.
 - Must not specify `gpuRequired: true` without a corresponding Issue requirement.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_demo-designer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_demo-designer.md` and commit with message `chore(demo-designer): logbook update — <summary>`.

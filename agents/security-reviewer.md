@@ -42,3 +42,9 @@ Stop and request maintainer review when:
 - A license incompatible with the repository license is detected.
 - A secret or credential is found anywhere in the diff.
 - A privileged container or Docker socket mount is proposed.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_security-reviewer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_security-reviewer.md` and commit with message `chore(security-reviewer): logbook update — <summary>`.  
+Security reviewer is **read-only** by default — it never pushes implementation changes, only findings.

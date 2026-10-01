@@ -45,3 +45,8 @@ Run the full smoke sequence twice in a clean environment; both runs must succeed
 
 - Tests must not require network access to external services during CI (use fixtures or mocks).
 - `test.sh` exit code must reflect the pass/fail result: 0 = pass, non-zero = fail.
+
+## Session protocol
+
+**Start**: read `agents/logbooks/logbook_test-engineer.md` (if it exists), then read the handoff file.  
+**End**: append one entry to `agents/logbooks/logbook_test-engineer.md` and commit with message `chore(test-engineer): logbook update — <summary>`.
