@@ -1,76 +1,128 @@
-﻿# Private RAG — Architecture Outline
-
-> **Note**: This is a structured outline for the documentation-writer (T4) to expand into full narrative documentation. Bullet points are intentionally terse.
-
----
-
-## Overview
-
-- Fully self-hosted, air-gapped-capable RAG stack
-- No data leaves the host; all inference and embedding runs locally
-- Targets enterprise knowledge management use cases (policy retrieval, internal Q&A)
-- GPU-optional: runs on CPU (slower) or accelerated on NVIDIA RTX 3090 / RTX 5060 Ti
-
----
+# Private RAG — Architecture
 
 ## Component Diagram
 
 ```
-User Browser
-     |
-     v
-Open WebUI (port 3000)
-     |                    |
-     v                    v
-Qdrant (6333/6334)    Ollama (11434)
-  vector store          LLM inference
+  ┌─────────────────────────────────────────────────────────────┐
+  │                        Host machine                          │
+  │                                                               │
+  │  User Browser ──── port 3000 ────► ┌──────────────────────┐ │
+  │                                    │     Open WebUI        │ │
+  │                                    │  (open-webui:v0.11.4) │ │
+  │                                    │    port 8080 (int.)   │ │
+  │                                    └───────┬───────┬───────┘ │
+  │                                            │       │         │
+  │                             rag-net        │       │         │
+  │              ┌─────────────────────────────┘       │         │
+  │              ▼                                     ▼         │
+  │  ┌───────────────────────┐         ┌───────────────────────┐ │
+  │  │       Qdrant          │         │       Ollama           │ │
+  │  │  (qdrant:v1.19.1)    │         │  (ollama:0.35.0)      │ │
+  │  │  REST  6333 (host)    │         │  REST  11434 (host)   │ │
+  │  │  gRPC  6334 (host)    │         │                       │ │
+  │  │  storage: qdrant-data │         │  storage: ollama-data │ │
+  │  └───────────────────────┘         └───────────────────────┘ │
+  │                                                               │
+  └─────────────────────────────────────────────────────────────┘
 ```
 
-- **Open WebUI** -> Qdrant: stores and retrieves document chunk embeddings for RAG context
-- **Open WebUI** -> Ollama: sends assembled prompts; receives generated responses
-- **Qdrant** gRPC (6334) used internally by Open WebUI; REST (6333) exposed for administration
-- All three services on isolated `rag-net` bridge network; only Open WebUI port 3000 exposed to host
+All inter-service communication uses Docker DNS names (`qdrant`, `ollama`, `app`) on the `rag-net` bridge network. No host-networking or privileged containers are used.
 
 ---
 
 ## Data Flow
 
-### Ingestion path
+### Document Ingestion
 
-1. User uploads document (PDF, Markdown, plain text) via Open WebUI
-2. Open WebUI chunks the document (configurable chunk size / overlap)
-3. Chunks are embedded using the embedding model served by Ollama
-4. Embeddings + metadata stored in Qdrant collection `documents`
+```
+User (browser)
+  │
+  │  POST /api/v1/files/  (multipart upload)
+  ▼
+Open WebUI
+  │  chunk document (configurable size / overlap)
+  │  POST /api/embeddings  →  Ollama (nomic-embed-text)
+  │                           ← float32 vector [768-dim]
+  │  PUT /collections/documents/points  →  Qdrant
+  │                                        stores (vector, payload)
+  └─► "File added to knowledge base"
+```
 
-### Query path
+### Query and Retrieval
 
-1. User submits a natural-language question via Open WebUI chat
-2. Question is embedded; Qdrant retrieves top-k similar chunks
-3. Retrieved chunks are assembled into a context window with the question
-4. Full prompt sent to Ollama LLM; streamed response returned to user
+```
+User (browser)
+  │
+  │  POST /api/chat/completions  (with files=[{type:"collection",id:"…"}])
+  ▼
+Open WebUI
+  │  embed question  →  Ollama (nomic-embed-text)
+  │                      ← query vector [768-dim]
+  │  vector search  →  Qdrant
+  │                      ← top-k chunks + metadata
+  │  build prompt:
+  │    [system]  You are a helpful assistant.
+  │    [context] <retrieved chunks>
+  │    [user]    <original question>
+  │  POST /api/chat  →  Ollama (mistral:7b-instruct-q4_K_M or variant)
+  │                      ← streamed token response
+  └─► streamed answer with cited sources to browser
+```
 
 ---
 
 ## Deployment Modes
 
-| Mode | Profile | Notes |
-|---|---|---|
-| CPU | default | No GPU needed; slower inference; suitable for testing |
-| RTX 5060 Ti | `--profile gpu-5060ti` | NVIDIA RTX 5060 Ti; CUDA 12.x driver required |
-| RTX 3090 | `--profile gpu-3090` | NVIDIA RTX 3090; CUDA 12.x driver required |
-| Cloud API | `--profile cloud` | vLLM sidecar replaces Ollama; requires API key |
+| Mode | `GPU_TIER` value | LLM model | VRAM required | Notes |
+|---|---|---|---|---|
+| CPU (default) | `cpu` | `mistral:7b-instruct-q4_K_M` | none | ~8 GB RAM; ~6–8 tok/s on modern CPU |
+| RTX 5060 Ti | `rtx5060ti` | `mistral-nemo:12b-instruct-2407-q4_K_M` | 12 GB | CUDA 12.x; NVIDIA Container Toolkit ≥ 1.14 |
+| RTX 3090 | `rtx3090` | `mistral-small3.1:24b-instruct-2503-q4_K_M` | 24 GB | CUDA 12.x; full 24 GB VRAM model |
+| Cloud API | `cloud` (future) | via `OPENAI_API_BASE_URLS` | none | Routes inference to an external OpenAI-compatible endpoint |
 
-GPU profiles add `deploy.resources.reservations.devices` to the Ollama service. The Qdrant and Open WebUI services are identical across all modes.
+GPU profiles are activated by setting `GPU_TIER` in `.env`. The `compose.yaml` Ollama service must be extended with `deploy.resources.reservations.devices` for GPU access — see the NVIDIA Container Toolkit documentation.
+
+The embedding service (`nomic-embed-text`) and Qdrant are identical across all modes; only the LLM selection changes.
 
 ---
 
-## Networking
+## Network Topology
 
-- Bridge network `rag-net` with `internal: false` (required for Ollama model pulls and Open WebUI updates)
-- Port bindings (host -> container):
-  - `3000:8080` -- Open WebUI
-  - `11434:11434` -- Ollama REST API
-  - `6333:6333` -- Qdrant REST
-  - `6334:6334` -- Qdrant gRPC
-- All inter-service communication uses Docker DNS service names (`qdrant`, `ollama`, `app`)
-- No host networking; no privileged containers
+```
+Host OS
+  ├── 0.0.0.0:3000  ──►  app:8080      (Open WebUI HTTP)
+  ├── 0.0.0.0:11434 ──►  ollama:11434  (Ollama REST — for direct model management)
+  ├── 0.0.0.0:6333  ──►  qdrant:6333   (Qdrant REST — for administration)
+  └── 0.0.0.0:6334  ──►  qdrant:6334   (Qdrant gRPC — used by Open WebUI)
+
+Docker bridge network: rag-net
+  app     → qdrant  (http://qdrant:6333, grpc://qdrant:6334)
+  app     → ollama  (http://ollama:11434)
+  ollama  → internet (model pulls from registry.ollama.ai)
+  qdrant  → (no outbound calls)
+```
+
+Port overrides: set `DEMO_PORT`, `OLLAMA_PORT`, `QDRANT_PORT`, `QDRANT_GRPC_PORT` in `.env` if defaults conflict with existing services.
+
+---
+
+## Volume Layout
+
+| Volume name | Mounted in | Path inside container | Contents |
+|---|---|---|---|
+| `ollama-data` | `ollama` | `/root/.ollama` | Downloaded models (nomic-embed-text, mistral variants); ~8–25 GB depending on tier |
+| `qdrant-data` | `qdrant` | `/qdrant/storage` | Vector collections, WAL, snapshots; size grows with ingested documents |
+| `open-webui-data` | `app` | `/app/data` | SQLite database (users, knowledge base metadata, chat history), uploaded file cache |
+
+All three volumes are named Docker volumes managed by Compose. They persist across `./demo.sh stop` and are removed only by `./demo.sh reset` (`docker compose down -v`).
+
+---
+
+## Security Design
+
+- All containers run with `cap_drop: ALL` and `security_opt: no-new-privileges:true`.
+- Qdrant and Ollama containers are `read_only: true`; writable paths are mounted via `tmpfs` or named volumes.
+- `ENABLE_SIGNUP: "false"` on Open WebUI prevents self-registration; accounts must be created by the admin.
+- `WEBUI_AUTH: "true"` enforces authentication on every Open WebUI request.
+- Qdrant `QDRANT__SERVICE__API_KEY` is optional for local demos; set it for any network-exposed deployment.
+- All secrets live in `.env` which is `.gitignore`d; the only secret in the image layers is the session signing key path (not its value).
