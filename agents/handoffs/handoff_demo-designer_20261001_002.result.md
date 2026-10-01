@@ -40,7 +40,7 @@ All required artifacts created and committed on `feat/issue-2-private-rag` (comm
 | `demos/private-rag/demo.yaml` | created | Schema-validated (manual); ports 3000/11434/6333/6334 |
 | `demos/private-rag/fixtures/document-retention-policy.md` | created | Contains "7 years" anchor in Financial Records Retention section |
 | `demos/private-rag/fixtures/it-security-policy.md` | created | Contains "12 characters" and "90 days" anchors in Password Policy section |
-| `demos/private-rag/fixtures/it-security-policy.pdf` | **NOT created** | See T3 note below |
+| `demos/private-rag/fixtures/it-security-policy.pdf` | created | Generated via fpdf2 on berlin-3eie (commit df6deef) |
 | `demos/private-rag/docs/architecture.md` | created | Outline ready for T4 expansion |
 | `agents/logbooks/logbook_demo-designer.md` | created | First entry written |
 

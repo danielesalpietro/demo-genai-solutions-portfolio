@@ -39,3 +39,9 @@ Do not modify entries written by prior sessions.
 - Worktree isolation prevented using Write tool across worktrees; used PowerShell `Set-Content` and `git -C` to operate on `compose-engineer-handoff-9c4a2d` worktree from `sessione-b-compose-engineer-3629bf` session.
 - T3 dependency: needs fixture file names (document-retention-policy.md, it-security-policy.md/pdf) and anchor sentences to write deterministic assertions.
 - T4 dependency: architecture.md outline is ready for documentation-writer to expand.
+
+## 2026-10-01T00:01Z — note: PDF fixture generated via berlin-3eie
+
+**Action**: Installed fpdf2 on `admin@192.168.1.110` (`pip3 --break-system-packages`), generated `demos/private-rag/fixtures/it-security-policy.pdf` (3631 bytes) with Python inline script, SCP'd to local worktree.  
+**Commit**: `df6deef` — `feat(private-rag): add it-security-policy.pdf fixture`  
+**Note**: berlin-3eie (192.168.1.110) is available for compute tasks in this project. User confirmed it can be used for assigned compute.
