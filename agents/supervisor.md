@@ -52,14 +52,19 @@ Push the empty branch so specialist sessions have a target.
 
 For each task, in dependency order:
 
-**If execution context is `local`** — create a handoff file and tell the operator which specialist Claude Code session to activate:
+**If execution context is `local`** — create a handoff file and tell the operator which specialist Claude Code session to activate.
+
+Read the handoff's `requirements` field (if any) and derive the correct `Where` line:
+- Needs Docker / `docker compose` → `local: desktop-app tab or WSL2 terminal with Docker`
+- Needs Python / Node / CLI tools → `local: desktop-app tab or WSL2 terminal`
+- File-only (no CLI tools) → `local: desktop-app tab`
 
 ```
 SPECIALIST SESSION NEEDED
 Role    : <role>
 Handoff : agents/handoffs/<filename>
-Activate: open a Claude Code session in this repo
-          → /remote-control agents/handoffs/<filename>
+Where   : <local: desktop-app tab | local: desktop-app tab or WSL2 terminal with Docker | local: WSL2 terminal>
+Activate: /remote-control agents/handoffs/<filename>
 ```
 
 **If execution context is `remote:<target>`** — create a handoff file and request the remote session:
