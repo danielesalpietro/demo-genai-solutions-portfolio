@@ -1,0 +1,99 @@
+# Private-RAG stack: Open WebUI + Ollama + Qdrant.
+# Runs fully offline after initial image pull.
+# All images pinned to digest for reproducibility.
+#
+# Usage:
+#   docker compose --env-file .env up -d
+#   docker compose --env-file .env down -v   # stops and removes volumes
+
+name: private-rag
+
+services:
+
+  qdrant:
+    image: qdrant/qdrant:v1.19.1@sha256:12364fe851b9f17356fc88189fc06d1b521262e04659ec7345975b00c9246a10
+    restart: "no"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp
+    volumes:
+      - qdrant-data:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT__SERVICE__API_KEY:-}
+    networks:
+      - rag-net
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:6333/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  ollama:
+    image: ollama/ollama:0.35.0@sha256:2a6e883b917fc543389599dae79918f5cac9e1438890506982f44aa4f5625d01
+    restart: "no"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - rag-net
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:11434/api/tags"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  app:
+    image: ghcr.io/open-webui/open-webui:v0.11.4@sha256:9591b13f13843c7721c2b8eaf7382846c81b3ffe126526d1888d1fed50c6a33f
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui-data:/app/data
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      OPENAI_API_BASE_URLS: ${OPENAI_API_BASE_URLS:-}
+      VECTOR_DB: qdrant
+      QDRANT_URI: http://qdrant:6333
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
+      WEBUI_AUTH: "true"
+      DEFAULT_USER_ROLE: user
+      ENABLE_SIGNUP: "false"
+    networks:
+      - rag-net
+    depends_on:
+      ollama:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  rag-net:
+    driver: bridge
+    internal: true
+
+volumes:
+  ollama-data:
+  qdrant-data:
+  open-webui-data:
