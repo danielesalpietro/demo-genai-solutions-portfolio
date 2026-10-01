@@ -51,3 +51,27 @@ Append one entry per meaningful action. Commit after appending.
 **Waiting for**: `handoff_compose-engineer_20261001_001.result.md`, `handoff_demo-designer_20261001_002.result.md`
 
 ---
+
+## 2026-10-01T00:00Z — verify: T1 (compose-engineer)
+
+**Action**: Verified `handoff_compose-engineer_20261001_001.result.md`. Status: completed.
+**PASS**:
+- All 3 images pinned to `tag@sha256:digest` (qdrant v1.19.1, ollama 0.35.0, open-webui v0.11.4)
+- `no-new-privileges:true` and `cap_drop: [ALL]` on all 3 services
+- `read_only: true` on qdrant and ollama; tmpfs on /tmp
+- `.env.example` placeholder values only
+- vllm image pinned: `v0.30.0@sha256:8a69f...`
+- Logbook entry written
+**FINDING — WARNING**: `rag-net` defined with `internal: true` — prevents Ollama from pulling models at startup. Issue requires `demo.sh start` to pull models; this breaks that requirement.
+**Resolution**: created follow-up handoff T1b (`handoff_compose-engineer_20261001_007.md`) — one-line fix (remove `internal: true`). T3 (script-engineer) must not start until T1b is complete.
+**NOTE**: `docker compose config --quiet` validation deferred (Docker not available in compose-engineer session) — T6 must validate.
+
+---
+
+## 2026-10-01T00:00Z — dispatch: T1b
+
+**Action**: Dispatched follow-up `handoff_compose-engineer_20261001_007.md` (T1b) — remove `internal: true` from rag-net.
+**Waiting for**: `handoff_compose-engineer_20261001_007.result.md`
+**Blocked**: T3 (script-engineer) must wait for T1b (and T2) before starting.
+
+---
