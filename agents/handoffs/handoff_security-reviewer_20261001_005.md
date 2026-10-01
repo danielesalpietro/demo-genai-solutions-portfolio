@@ -13,6 +13,10 @@
 | Requested | `2026-10-01T00:00Z` |
 | Completed | _(filled by session)_ |
 
+## Supervisor Amendment — 2026-10-01
+
+> **Known history finding**: commit `f68827a` (by T2 session) added `mylab_assets.md` containing: private LAN IP `192.168.1.110`, SSH user `admin`, SSH key path on developer's machine. Removed in commit `05152ba`. File is now in `.gitignore`. No password or private key material. Gitleaks may flag this. Assess severity and include recommendation on whether git history cleanup is warranted.
+
 ## Assigned To
 
 - **Role**: `security-reviewer`

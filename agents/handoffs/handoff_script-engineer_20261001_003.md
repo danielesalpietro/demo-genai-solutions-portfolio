@@ -13,6 +13,12 @@
 | Requested | `2026-10-01T00:00Z` |
 | Completed | _(filled by session)_ |
 
+## Supervisor Amendment — 2026-10-01
+
+> **PDF fixture**: `demos/private-rag/fixtures/it-security-policy.pdf` is **already present** (generated on berlin-3eie via fpdf2). T3 does NOT need to generate it — just upload it in `demo.sh run`.
+>
+> **compose.yaml**: `rag-net` has no `internal: true` — Ollama can reach the internet for model pulls. No workaround needed in scripts.
+
 ## Assigned To
 
 - **Role**: `script-engineer`
