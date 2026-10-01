@@ -67,7 +67,8 @@ Each `demo.sh` must support: `check`, `start`, `run`, `status`, `stop`, and `res
 
 ## Agent roles
 
-- Supervisor: triage, decomposition, coordination, evidence review, PR readiness.
+- **Project Manager**: WBS tracking, daily status reports, change request management. Read-only on the project; writes only `project/wbs.yaml`, `project/change-requests/`, and its logbook. Activated via `/project-manager` (daily cron or manual). Does NOT dispatch handoffs.
+- **Supervisor**: triage, decomposition, coordination, evidence review, PR readiness. Notifies Project Manager on HOLD or escalation events.
 - Repository Architect: conventions, schemas, ADRs, compatibility.
 - Compose Engineer: Compose topology, health checks, networks, volumes, version pinning.
 - Script Engineer: deterministic lifecycle commands and cleanup.

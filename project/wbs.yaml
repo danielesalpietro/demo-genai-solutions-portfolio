@@ -1,0 +1,297 @@
+# APE Demo Factory — Work Breakdown Structure
+# Machine-readable source of truth for the Project Manager agent.
+# Updated by: /project-manager session (daily) and operator (structural changes).
+# Format: each item has a unique id, parent ref, status, and evidence pointer.
+# Status values: not_started | in_progress | completed | blocked | on_hold | cancelled
+
+schema_version: "1"
+last_updated: "2026-10-01"
+updated_by: "operator+supervisor"
+
+project:
+  id: P01
+  title: "APE Demo Factory"
+  description: "Self-contained, reproducible, secure Docker Compose GenAI demos with agentic governance"
+  repo: "https://github.com/danielesalpietro/demo-genai-solutions-portfolio"
+  branch_main: develop
+
+# ─────────────────────────────────────────────────────────────────
+# EPICS
+# ─────────────────────────────────────────────────────────────────
+epics:
+
+  - id: E01
+    title: "Platform & Infrastructure"
+    status: completed
+    description: "Cloud packaging, CI, credential management, agent governance system"
+
+  - id: E02
+    title: "Demo Catalogue — Alpha Wave"
+    status: in_progress
+    description: "First batch of experimental demos (private-rag first, then pipeline)"
+    target_demos: 16
+
+  - id: E03
+    title: "Demo Catalogue — Maintained Wave"
+    status: not_started
+    description: "Promote alpha demos to lifecycle:maintained after smoke + cloud test"
+
+# ─────────────────────────────────────────────────────────────────
+# DELIVERABLES — E01 Platform
+# ─────────────────────────────────────────────────────────────────
+deliverables:
+
+  - id: D01
+    epic: E01
+    title: "Cloud packaging system"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "packages/*/setup.sh, packages/*/docker-compose.cloud.yaml"
+    notes: "13 packages; multi-backend inference (ollama/vllm/api); GPU tiers rtx3090/rtx5060ti/cpu"
+
+  - id: D02
+    epic: E01
+    title: "CI pipeline"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: ".github/workflows/"
+    notes: "validate, smoke, test-cloud, 16 package-*.yml workflows"
+
+  - id: D03
+    epic: E01
+    title: "Credential management"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "scripts/manage-credentials.sh, packages/*/secrets/"
+
+  - id: D04
+    epic: E01
+    title: "Schema system"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "schemas/demo.schema.json, schemas/package.schema.json"
+
+  - id: D05
+    epic: E01
+    title: "Agentic governance (Supervisor + specialists)"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/supervisor.md, agents/*.md, .claude/agents/"
+    notes: "Supervisor, 8 specialist roles, remote-control protocol, logbooks, handoffs"
+
+  - id: D06
+    epic: E01
+    title: "Infrastructure registry"
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/infrastructure.md"
+    notes: "berlin-3eie (Z8 G4): RTX 3090 + RTX 5060 Ti, 240 GB RAM, 574 GB free"
+
+  - id: D07
+    epic: E01
+    title: "Project management layer (PM agent + WBS)"
+    status: in_progress
+    target_date: "2026-10-01"
+    evidence: "project/wbs.yaml, agents/project-manager.md"
+    notes: "This deliverable — daily reports, change requests, WBS tracking"
+
+# ─────────────────────────────────────────────────────────────────
+# DELIVERABLES — E02 Alpha Demos
+# ─────────────────────────────────────────────────────────────────
+
+  - id: D10
+    epic: E02
+    title: "hello-compose"
+    status: completed
+    lifecycle: ready-to-use
+    actual_date: "2026-09-01"
+    evidence: "demos/hello-compose/"
+
+  - id: D11
+    epic: E02
+    title: "private-rag — Enterprise Knowledge Assistant"
+    status: in_progress
+    lifecycle: experimental
+    issue: "#2"
+    branch: "feat/issue-2-private-rag"
+    target_date: "2026-10-05"
+
+  - id: D12
+    epic: E02
+    title: "talk-to-data"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D13
+    epic: E02
+    title: "speech-intelligence"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D14
+    epic: E02
+    title: "supply-chain-agent"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D15
+    epic: E02
+    title: "visual-inspection"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D16
+    epic: E02
+    title: "agentic-dev"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D17
+    epic: E02
+    title: "context-fabric"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D18
+    epic: E02
+    title: "embodied-ai"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D19
+    epic: E02
+    title: "content-creator"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D20
+    epic: E02
+    title: "virtual-human"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D21
+    epic: E02
+    title: "drug-discovery"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D22
+    epic: E02
+    title: "software-modernisation"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D23
+    epic: E02
+    title: "video-intelligence"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D24
+    epic: E02
+    title: "agents-4-everything"
+    status: not_started
+    lifecycle: candidate
+
+  - id: D25
+    epic: E02
+    title: "finance-agent"
+    status: not_started
+    lifecycle: candidate
+
+# ─────────────────────────────────────────────────────────────────
+# TASKS — D11 private-rag
+# ─────────────────────────────────────────────────────────────────
+tasks:
+
+  - id: D11-T1
+    deliverable: D11
+    title: "Compose topology + image pinning"
+    role: compose-engineer
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/handoffs/handoff_compose-engineer_20261001_001.result.md"
+
+  - id: D11-T2
+    deliverable: D11
+    title: "Demo manifest + fixtures + architecture outline"
+    role: demo-designer
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/handoffs/handoff_demo-designer_20261001_002.result.md"
+
+  - id: D11-T3
+    deliverable: D11
+    title: "Lifecycle scripts (demo.sh, test.sh, reset.sh)"
+    role: script-engineer
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/handoffs/handoff_script-engineer_20261001_003.result.md"
+    notes: "15/15 contract tests pass on berlin-3eie"
+
+  - id: D11-T4
+    deliverable: D11
+    title: "Documentation (README 9 sections, architecture.md)"
+    role: documentation-writer
+    status: completed
+    actual_date: "2026-10-01"
+    evidence: "agents/handoffs/handoff_documentation-writer_20261001_004.result.md"
+    notes: "setup_buildin.md missing — T4b needed"
+
+  - id: D11-T4b
+    deliverable: D11
+    title: "setup_buildin.md — manual reproduction guide"
+    role: documentation-writer
+    status: not_started
+    depends_on: [D11-T4, D11-T5b, D11-T6]
+    notes: "Write after T5b and T6 complete — Phase 4+5 command logs needed"
+
+  - id: D11-T5
+    deliverable: D11
+    title: "Security review (Trivy + Gitleaks + static)"
+    role: security-reviewer
+    status: on_hold
+    actual_date: "2026-10-01"
+    evidence: "agents/handoffs/handoff_security-reviewer_20261001_005.result.md"
+    blocker: "3 CRITICAL CVEs in qdrant perl-base — awaiting human CVE decision on Issue #2"
+    blocking: [D11-T6]
+
+  - id: D11-T5b
+    deliverable: D11
+    title: "Trivy retry — open-webui + vllm"
+    role: security-reviewer
+    status: in_progress
+    depends_on: []
+    evidence: "agents/handoffs/handoff_security-reviewer_20261001_008.md"
+    blocking: [D11-T6]
+
+  - id: D11-T6
+    deliverable: D11
+    title: "Gate check — make validate + smoke test"
+    role: test-engineer
+    status: blocked
+    depends_on: [D11-T3, D11-T4, D11-T5, D11-T5b]
+    blocking: [D11-PR]
+    blocker: "Waiting: CVE decision (T5 HOLD) + T5b completion"
+
+  - id: D11-PR
+    deliverable: D11
+    title: "Pull Request — feat/issue-2-private-rag → develop"
+    role: supervisor
+    status: not_started
+    depends_on: [D11-T6]
+
+# ─────────────────────────────────────────────────────────────────
+# CHANGE REQUESTS
+# ─────────────────────────────────────────────────────────────────
+change_requests: []
+# Populated by /project-manager when a strategic deviation is detected.
+# Format per entry:
+#   - id: CR-001
+#     opened: YYYY-MM-DD
+#     status: open | approved | rejected | deferred
+#     title: short description
+#     impact: scope | timeline | resources | security
+#     github_issue: "#NNN"
+#     decision: null | <human decision text>
