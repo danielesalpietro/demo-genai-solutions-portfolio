@@ -26,6 +26,10 @@ on:
       - "packages/context-fabric/**"
     branches: [develop]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   package:
     uses: ./.github/workflows/_package-build.yml

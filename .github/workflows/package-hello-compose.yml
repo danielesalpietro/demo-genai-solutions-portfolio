@@ -26,6 +26,10 @@ on:
       - "packages/hello-compose/**"
     branches: [develop]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   package:
     uses: ./.github/workflows/_package-build.yml
