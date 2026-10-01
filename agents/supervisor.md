@@ -53,44 +53,55 @@ Push the empty branch so specialist sessions have a target.
 
 For each task, in dependency order:
 
-**If execution context is `local`** — create a handoff file and tell the operator which specialist Claude Code session to activate.
+**If execution context is `local`** — create a handoff file and print the block below verbatim.
+The operator pastes the "First message" line as the very first message in the new session.
 
-Read the handoff's `requirements` field (if any) and derive the correct `Where` line:
+Read the handoff's requirements and derive the `Where` line:
 - Needs Docker / `docker compose` → `local: desktop-app tab or WSL2 terminal with Docker`
 - Needs Python / Node / CLI tools → `local: desktop-app tab or WSL2 terminal`
-- File-only (no CLI tools) → `local: desktop-app tab`
+- File-only → `local: desktop-app tab`
 
 ```
-SPECIALIST SESSION NEEDED
-Role    : <role>
-Handoff : agents/handoffs/<filename>
-Where   : <local: desktop-app tab | local: desktop-app tab or WSL2 terminal with Docker | local: WSL2 terminal>
-Activate: /remote-control agents/handoffs/<filename>
+━━━ SPECIALIST SESSION NEEDED ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Role        : <role>
+Handoff     : agents/handoffs/<filename>
+Where       : <local: desktop-app tab | WSL2 terminal with Docker>
+Branch      : <branch-name>
+
+First message (paste as-is into the new session):
+  /remote-control agents/handoffs/<filename>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-**If execution context is `remote:<target>`** — create a handoff file and request the remote session.
-Look up `<target>` in `agents/infrastructure.md` for IP, user, and OS.
+**If execution context is `remote:<target>`** — create a handoff file and print the block below verbatim.
+Look up target details in `agents/infrastructure.md`.
+
+For **`remote:z8g4`**:
 
 ```
-REMOTE SESSION NEEDED
-Role    : <role>
-Target  : <system> (<IP>, <OS>)
-Handoff : agents/handoffs/<filename>
-Activate: ssh <user>@<IP> (key: local SSH key on operator's PC)
-          then: claude → /remote-control agents/handoffs/<filename>
-Access  : <what the operator needs to provide — SSH key path, sudo password, API key env var>
+━━━ REMOTE SESSION NEEDED — berlin-3eie (Z8 G4) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Role        : <role>
+Handoff     : agents/handoffs/<filename>
+Target      : admin@192.168.1.110 (Ubuntu 24.04, Docker 29.7.2)
+Branch      : <branch-name>
+
+Step 1 — open a terminal on your workstation and connect:
+  ssh -i "C:\Users\danie\Downloads\.ssh\id_ed25519" admin@192.168.1.110
+
+Step 2 — on the server, ensure repo is present and up to date:
+  cd ~/demo-genai-solutions-portfolio 2>/dev/null || \
+    git clone https://github.com/danielesalpietro/demo-genai-solutions-portfolio
+  git fetch origin && git checkout <branch-name> && git pull
+
+Step 3 — start a Claude Code session on the server:
+  claude
+
+First message (paste as-is into that session):
+  /remote-control agents/handoffs/<filename>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-For `remote:z8g4` specifically:
-```
-REMOTE SESSION NEEDED — Z8 G4
-Role    : <role>
-Target  : Z8 G4 (192.168.1.110, Linux)
-Handoff : agents/handoffs/<filename>
-Activate: ssh admin@192.168.1.110 -i <your-local-ssh-key>
-          then: claude → /remote-control agents/handoffs/<filename>
-Access  : SSH key path (operator provides in-session)
-```
+For other `remote:<target>` systems, adapt the block using the target's entry in `agents/infrastructure.md`.
 
 ### 5 — Wait for results
 

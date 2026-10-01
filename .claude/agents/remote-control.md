@@ -11,6 +11,8 @@ If `args` is empty, ask the operator: "Which handoff file should I load? (path r
 
 ## Steps (execute in order, do not skip)
 
+0. **Sync repo**: before anything else, run `git pull origin <current-branch>` (or `git fetch && git checkout feat/issue-2-private-rag && git pull` if on wrong branch). The handoff file was written by the Supervisor and may not exist locally until after this pull. If the file still does not exist after the pull, tell the operator: "File not found after pull — confirm branch and path."
+
 1. **Read handoff file** at the path given in `args`. Parse all sections.
 2. **Read role logbook** at `agents/logbooks/logbook_<role>.md` if it exists (role is from the handoff's "Assigned To" section). This provides memory of prior sessions.
 3. **Confirm access**: Display the "Credentials / Access" section from the handoff and ask the operator to confirm or provide the missing values. Wait for confirmation before proceeding to step 4.
