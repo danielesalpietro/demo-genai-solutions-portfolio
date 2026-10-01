@@ -130,3 +130,18 @@ Append one entry per meaningful action. Commit after appending.
 - T6 (test-engineer): `berlin-3eie` is the validated test target; `/workspace` is ready.
 
 ---
+
+## 2026-10-01T00:00Z — operator-sync: T5 interim finding
+
+**Source**: operator relay (T5 session still running).
+**Finding**: T5 Trivy scan of `qdrant/qdrant:v1.19.1` → **3 CRITICAL + 60 HIGH** CVEs, some with fixes available. Scan of `ollama/ollama` and `ghcr.io/open-webui/open-webui` in progress.
+**Protocol**: 3 CRITICAL exceed policy threshold — this is an escalation event per `AGENTS.md`.
+**Pre-decision**: On T5 result receipt, Supervisor must:
+1. Inspect which CVE IDs are CRITICAL and whether they are in qdrant application code or base OS layer.
+2. Check if a newer qdrant tag (e.g. v1.20.x) resolves the CRITICAL CVEs.
+3. If fixable → dispatch T1b to update qdrant image digest to fixed version.
+4. If no fix available → document exception in `security/trivy-exceptions.yaml` (CVE-ID, layer, rationale, review date).
+5. If CVE is in qdrant core with public exploit → escalate to human maintainer before proceeding.
+**Blocked**: T6 (test-engineer) must NOT start until T5 result is processed and CVE resolution path is confirmed.
+
+---
