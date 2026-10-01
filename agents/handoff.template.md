@@ -108,6 +108,21 @@ The task is complete when ALL of these are true:
 |---|---|
 | `<path>` | created \| modified \| unchanged |
 
+### Command log
+
+<!-- REQUIRED — fill with the exact sequence of commands run during this task.
+     Number each step. Include expected outputs where relevant.
+     This section is the source for setup_buildin.md (manual reproduction guide).
+     Format: step number, command, one-line description of what it does/verifies. -->
+
+```bash
+# Step 1 — <description>
+<exact command>
+
+# Step 2 — <description>
+<exact command>
+```
+
 ### Issues encountered
 
 <any problems, workarounds, or open items for the Supervisor>
