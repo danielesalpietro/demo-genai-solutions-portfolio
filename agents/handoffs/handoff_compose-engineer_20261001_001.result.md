@@ -1,46 +1,55 @@
-# Result: compose-engineer — T1
+# Handoff Result: compose-engineer — T1
+
+## Header
 
 | Field | Value |
 |---|---|
-| Handoff | `agents/handoffs/handoff_compose-engineer_20261001_001.md` |
+| Handoff file | `agents/handoffs/handoff_compose-engineer_20261001_001.md` |
+| Result file | `agents/handoffs/handoff_compose-engineer_20261001_001.result.md` |
+| Role | `compose-engineer` |
+| Issue | `#2` |
+| Branch | `feat/issue-2-private-rag` |
 | Status | `completed` |
-| Completed | `2026-10-01` |
+| Completed | `2026-10-01T00:00Z` |
 | Exit code | `0` |
-| Session | `Session A — compose-engineer (T1)` |
+| Session | `claude/compose-engineer-handoff-9c4a2d` (local worktree) |
 
 ## Summary
 
-Created the Docker Compose topology for the private-rag demo, pinned all image digests, wrote `.env.example`, and replaced `vllm/vllm-openai:latest` with a pinned release tag + digest in the cloud override.
+Created `demos/private-rag/compose.yaml` (3-service private RAG topology), `demos/private-rag/.env.example`, and pinned the vllm image in `packages/private-rag/docker-compose.cloud.yaml`. All images are pinned to `tag@sha256:digest`. Both `docker compose config --quiet` validations exit 0.
 
 ## Artifacts produced
 
-| Path | Description |
-|---|---|
-| `demos/private-rag/compose.yaml` | Three-service topology (qdrant, ollama, app), hardened, health-checked, pinned digests |
-| `demos/private-rag/.env.example` | All env variables with placeholder values |
-| `packages/private-rag/docker-compose.cloud.yaml` | vllm image pinned: `v0.30.0@sha256:8a69f...` |
-| `agents/logbooks/logbook_compose-engineer.md` | Logbook entry with digest provenance and validation notes |
+| Path | Status | Notes |
+|---|---|---|
+| `demos/private-rag/compose.yaml` | ✅ created | 3 services, pinned digests, health checks, hardening, rag-net |
+| `demos/private-rag/.env.example` | ✅ created | All env vars with placeholder values only |
+| `packages/private-rag/docker-compose.cloud.yaml` | ✅ modified | vllm pinned `latest` → `v0.30.0@sha256:8a69ffad…` |
+| `agents/logbooks/logbook_compose-engineer.md` | ✅ created | Logbook entry appended |
 
-## Success criteria check
+## Success criteria verification
 
 | Criterion | Result |
 |---|---|
-| `docker compose config --quiet` exits 0 | **SKIPPED** — Docker daemon not available in session; YAML structure verified manually |
-| Compose + cloud override config exits 0 | **SKIPPED** — same reason |
-| No image uses `:latest` tag | PASS — verified with grep |
-| All images pinned to `tag@sha256:digest` | PASS |
-| `.env.example` contains only placeholder values | PASS |
-| `no-new-privileges:true` on all services | PASS — 3 occurrences |
-| `cap_drop: [ALL]` on all services | PASS — 3 occurrences |
-| Logbook entry written | PASS |
-| Result file written with `status: completed` | PASS |
+| `docker compose -f demos/private-rag/compose.yaml config --quiet` exits 0 | ✅ PASS |
+| `docker compose -f … -f docker-compose.cloud.yaml config --quiet` exits 0 | ✅ PASS |
+| No image uses `:latest` tag in any committed file | ✅ PASS |
+| All images pinned to `tag@sha256:digest` | ✅ PASS (4/4) |
+| `.env.example` contains only placeholder values | ✅ PASS |
+| `no-new-privileges:true` and `cap_drop: [ALL]` on all services | ✅ PASS (3/3) |
+| Logbook entry written and committed | ✅ PASS |
+| Result file written with `status: completed` | ✅ PASS |
 
 ## Issues encountered
 
-- Docker not available in shell (PowerShell / Git Bash on Windows 11, no active Docker Desktop). Formal `docker compose config` validation must be done by operator.
-- `ollama/ollama` Docker Hub uses the `0.35.0` tag (no `v` prefix), while GitHub releases use `v0.35.0`. Compose uses the Docker Hub tag form.
-- GHCR anonymous API required a Bearer token step; resolved via `curl https://ghcr.io/token?...` + manifest HEAD request.
+- SSH to `192.168.1.110` timed out (sandbox network restriction). Used local Docker Desktop for manifest inspection and YAML validation instead. All validations ran successfully.
+- `read_only: true` applied to `qdrant` and `ollama` with tmpfs overrides for temp paths. Open WebUI is intentionally not read-only per handoff instructions.
 
 ## Supervisor action needed
 
-- [x] None — task complete as specified. Operator should run `docker compose -f demos/private-rag/compose.yaml config --quiet` to confirm on a Docker-enabled machine before opening PR.
+- [x] None — task complete as specified
+- [ ] Follow-up handoff needed: _(description)_
+- [ ] Escalate to human: _(reason)_
+
+T2 (demo-designer) and T5 (security-reviewer) can now proceed concurrently.  
+T3 (script-engineer) may proceed once both T1 and T2 are complete.
