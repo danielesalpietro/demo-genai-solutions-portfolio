@@ -145,3 +145,44 @@ Append one entry per meaningful action. Commit after appending.
 **Blocked**: T6 (test-engineer) must NOT start until T5 result is processed and CVE resolution path is confirmed.
 
 ---
+
+## 2026-10-01T00:00Z — verify: T3 (script-engineer)
+
+**Action**: Verified `handoff_script-engineer_20261001_003.result.md`. Status: completed.
+**PASS**:
+- `demo.sh` (232 lines): check/start/run/status/stop/reset all implemented
+- `test.sh`: 15 contract tests, all passed on berlin-3eie
+- `reset.sh`: idempotent, verified exit 0 on second run
+- shellcheck: exit 0 (SC1091 info only, expected)
+- "7 years" assertion present in demo.sh run
+- No hardcoded ports or credentials
+- `README.md` placeholder created for T4
+**NOTE**: agents/infrastructure.md committed (IP + user visible, no key path) — operator-sync entry confirms IP is acceptable, key path not committed. Acceptable.
+
+---
+
+## 2026-10-01T00:00Z — verify: T5 (security-reviewer) — ESCALATE
+
+**Action**: Verified `handoff_security-reviewer_20261001_005.result.md`. Status: completed. RECOMMENDATION: HOLD.
+**PASS**: Gitleaks CLEAN (0 leaks), compose.yaml all hardening checks pass, fixtures synthetic data, workflow permissions OK, ollama scan PASS (0 CRITICAL), git history mylab_assets concern resolved (Gitleaks found 0 leaks).
+**ESCALATE — CRITICAL CVEs in qdrant**:
+- CVE-2026-13221, CVE-2026-42496, CVE-2026-8376 — all in `perl-base 5.40.1-6`, Debian 13.6 OS base layer
+- Qdrant does NOT invoke Perl at runtime — mitigating factor
+- Fix version: `perl-base 5.40.1-6+deb13u1` — no qdrant release tag available
+- Escalation comment posted on Issue #2: https://github.com/danielesalpietro/demo-genai-solutions-portfolio/issues/2
+- **Waiting for human maintainer decision**: Option A (accept exception) or Option B (wait for patched image)
+**INCOMPLETE SCANS**: open-webui scan failed (HTTP/2 error), vllm not scanned (20 GB). T5b dispatched.
+**WARNINGS (non-blocking)**: cloud override — ipc:host, host bind mounts, vllm no cap_drop; df6deef commit body contains admin@192.168.1.110 (LOW, private IP).
+**T6 status**: BLOCKED pending human CVE decision.
+
+---
+
+## 2026-10-01T00:00Z — dispatch: T4 + T5b
+
+**Action**: T3 verified. Dispatching T4 (documentation-writer) — unblocked by T3, independent of T5 CVE decision. Also dispatching T5b for incomplete Trivy scans.
+**T4**: Expand README.md placeholder; all 9 sections; docs/architecture.md expansion; expected output must match demo.sh run format.
+**T5b** (`handoff_security-reviewer_20261001_008.md`): Trivy retry for open-webui (HTTP/2 retry on berlin-3eie) + vllm (20 GB, --timeout 30m on berlin-3eie).
+**T6**: Remains BLOCKED on human CVE decision + T4 + T5b results.
+**Waiting for**: `handoff_documentation-writer_20261001_004.result.md`, `handoff_security-reviewer_20261001_008.result.md`, human decision on Issue #2.
+
+---
