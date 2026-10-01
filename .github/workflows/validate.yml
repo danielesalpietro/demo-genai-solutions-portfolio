@@ -1,0 +1,26 @@
+name: Validate
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  repository:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install validators
+        run: sudo apt-get update && sudo apt-get install -y shellcheck yamllint
+      - name: Lint YAML
+        run: |
+          yamllint -d '{extends: default, rules: {line-length: disable, document-start: disable}}' .
+      - name: Validate repository contract
+        run: make validate
+      - name: Validate demo manifests
+        run: |
+          python -m pip install --disable-pip-version-check check-jsonschema
+          find demos -name demo.yaml -print0 | xargs -0 -n1 check-jsonschema --schemafile schemas/demo.schema.json

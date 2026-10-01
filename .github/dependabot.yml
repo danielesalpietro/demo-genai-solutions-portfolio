@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: {interval: weekly}
+    labels: ["dependencies", "github-actions"]
+    open-pull-requests-limit: 5
+  - package-ecosystem: docker
+    directory: /demos/hello-compose
+    schedule: {interval: weekly}
+    labels: ["dependencies", "docker"]
+    open-pull-requests-limit: 5

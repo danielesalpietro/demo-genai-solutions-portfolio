@@ -1,0 +1,29 @@
+name: ape-hello-compose
+services:
+  web:
+    image: nginx:1.27.5-alpine
+    read_only: true
+    ports:
+      - "${DEMO_PORT:-18080}:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./site:/usr/share/nginx/html:ro
+      - nginx-cache:/var/cache/nginx
+      - nginx-run:/var/run
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/health"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    restart: "no"
+volumes:
+  nginx-cache:
+  nginx-run:

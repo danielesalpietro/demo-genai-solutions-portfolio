@@ -1,0 +1,44 @@
+name: Smoke tests
+on:
+  pull_request:
+    paths:
+      - 'demos/**'
+      - 'templates/**'
+      - 'scripts/**'
+      - 'Makefile'
+      - '.github/workflows/smoke.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.demos.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v6
+      - id: demos
+        shell: bash
+        run: |
+          matrix=$(find demos -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+  smoke:
+    needs: discover
+    strategy:
+      fail-fast: false
+      matrix:
+        demo: ${{ fromJson(needs.discover.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run smoke test
+        run: make smoke DEMO=${{ matrix.demo }}
+      - name: Collect diagnostics
+        if: failure()
+        run: docker compose -f demos/${{ matrix.demo }}/compose.yaml logs --no-color || true
+      - name: Cleanup
+        if: always()
+        run: demos/${{ matrix.demo }}/reset.sh || true

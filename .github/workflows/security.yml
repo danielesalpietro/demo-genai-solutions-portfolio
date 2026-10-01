@@ -1,0 +1,39 @@
+name: Security
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 4 * * 1'
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  secrets-and-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with: {fetch-depth: 0}
+      - name: Scan secrets with Gitleaks
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.24.2 detect --source=/repo --no-banner --redact
+      - name: Scan repository with Trivy
+        run: |
+          docker run --rm -v "$PWD:/repo" aquasec/trivy:0.59.1 fs --exit-code 1 --severity HIGH,CRITICAL --scanners vuln,secret,misconfig /repo
+      - name: Reject unsafe workflow triggers and broad permissions
+        run: |
+          ! grep -R --exclude=security.yml "pull_request_target" .github/workflows
+          ! grep -R -E "permissions:[[:space:]]*write-all" .github/workflows
+  compose-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Scan declared container images
+        run: |
+          set -euo pipefail
+          images=$(find demos -name compose.yaml -exec docker compose -f {} config --images \; | sort -u)
+          while IFS= read -r image; do
+            [ -n "$image" ] || continue
+            docker pull "$image"
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.59.1 image --exit-code 1 --severity HIGH,CRITICAL --ignore-unfixed "$image"
+          done <<< "$images"

@@ -1,0 +1,7 @@
+* @OWNER/ape-maintainers
+/.github/ @OWNER/ape-maintainers @OWNER/ape-security
+/AGENTS.md @OWNER/ape-maintainers
+/policies/ @OWNER/ape-maintainers
+/scripts/ @OWNER/ape-platform-engineering
+/templates/ @OWNER/ape-platform-engineering
+/demos/ @OWNER/ape-demo-maintainers

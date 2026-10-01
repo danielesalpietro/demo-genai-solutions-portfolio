@@ -1,0 +1,32 @@
+name: New demo
+about: Propose a self-contained demonstration
+labels: ["demo:new", "triage"]
+body:
+  - type: input
+    id: title
+    attributes: {label: Demo name, description: Lowercase kebab-case identifier}
+    validations: {required: true}
+  - type: textarea
+    id: scenario
+    attributes: {label: Business scenario, description: Problem, audience, and desired outcome}
+    validations: {required: true}
+  - type: textarea
+    id: narrative
+    attributes: {label: Demo narrative, description: Steps and expected output}
+    validations: {required: true}
+  - type: textarea
+    id: components
+    attributes: {label: Components and external dependencies}
+    validations: {required: true}
+  - type: textarea
+    id: requirements
+    attributes: {label: Runtime requirements, description: CPU, RAM, disk, GPU, ports, and supported platforms}
+    validations: {required: true}
+  - type: textarea
+    id: security
+    attributes: {label: Security and licensing considerations}
+    validations: {required: true}
+  - type: textarea
+    id: acceptance
+    attributes: {label: Acceptance criteria, description: Use a verifiable checklist}
+    validations: {required: true}

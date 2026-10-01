@@ -1,0 +1,18 @@
+apiVersion: ape.demo/v1
+kind: Demo
+metadata:
+  name: hello-compose
+  title: Hello Compose Contract Demo
+spec:
+  category: repository-validation
+  lifecycle: maintained
+  maturity: stable
+  entrypoints:
+    start: ./demo.sh start
+    run: ./demo.sh run
+    test: ./test.sh
+    reset: ./reset.sh
+  security:
+    privilegedContainers: false
+    defaultCredentialsAllowed: false
+    secretsFromEnvironment: true

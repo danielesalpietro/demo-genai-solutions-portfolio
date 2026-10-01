@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "APE Demo Manifest",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {"const": "ape.demo/v1"},
+    "kind": {"const": "Demo"},
+    "metadata": {
+      "type": "object",
+      "required": ["name", "title"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 3}
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": ["category", "lifecycle", "maturity", "entrypoints", "security"],
+      "properties": {
+        "category": {"type": "string"},
+        "lifecycle": {"enum": ["experimental", "maintained", "deprecated", "archived"]},
+        "maturity": {"enum": ["alpha", "beta", "stable"]},
+        "entrypoints": {
+          "type": "object",
+          "required": ["start", "run", "test", "reset"],
+          "additionalProperties": {"type": "string"}
+        },
+        "security": {
+          "type": "object",
+          "required": ["privilegedContainers", "defaultCredentialsAllowed", "secretsFromEnvironment"],
+          "properties": {
+            "privilegedContainers": {"const": false},
+            "defaultCredentialsAllowed": {"const": false},
+            "secretsFromEnvironment": {"const": true}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
