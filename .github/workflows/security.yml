@@ -12,7 +12,7 @@ jobs:
   secrets-and-workflows:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with: {fetch-depth: 0}
       - name: Scan secrets with Gitleaks
         run: |
@@ -27,7 +27,7 @@ jobs:
   compose-images:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Scan declared container images
         run: |
           set -euo pipefail

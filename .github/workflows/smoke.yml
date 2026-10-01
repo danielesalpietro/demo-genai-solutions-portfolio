@@ -18,7 +18,7 @@ jobs:
     outputs:
       matrix: ${{ steps.demos.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: demos
         shell: bash
         run: |
@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Run smoke test
         run: make smoke DEMO=${{ matrix.demo }}
       - name: Collect diagnostics
