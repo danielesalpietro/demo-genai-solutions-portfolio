@@ -1,0 +1,10 @@
+{
+  "image": "pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime",
+  "diskGB": 50,
+  "gpuModel": "RTX_3090",
+  "minRAMGB": 16,
+  "inetUpMbps": 100,
+  "inetDownMbps": 500,
+  "env": ["GPU_TIER=rtx3090", "DEMO=video-intelligence"],
+  "onstart": "bash /workspace/video-intelligence/packages/video-intelligence/setup.sh"
+}

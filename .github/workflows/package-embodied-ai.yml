@@ -1,0 +1,37 @@
+name: Package · embodied-ai
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "validate | build | deploy-runpod | deploy-vastai"
+        required: false
+        default: validate
+        type: choice
+        options: [validate, build, deploy-runpod, deploy-vastai]
+      gpu:
+        description: "GPU tier — RTX 3090 required for full simulation"
+        required: false
+        default: rtx3090
+        type: choice
+        options: [rtx5060ti, rtx3090]
+      tag:
+        description: Docker image tag
+        required: false
+        default: latest
+        type: string
+  push:
+    paths:
+      - "demos/embodied-ai/**"
+      - "packages/embodied-ai/**"
+    branches: [develop]
+
+jobs:
+  package:
+    uses: ./.github/workflows/_package-build.yml
+    with:
+      demo: embodied-ai
+      action: ${{ inputs.action || 'validate' }}
+      gpu: ${{ inputs.gpu || 'rtx3090' }}
+      tag: ${{ inputs.tag || 'latest' }}
+    secrets: inherit

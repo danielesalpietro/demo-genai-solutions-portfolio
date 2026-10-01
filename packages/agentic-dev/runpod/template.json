@@ -1,0 +1,17 @@
+{
+  "name": "agentic-dev demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/agentic-dev:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 30,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,11434/tcp,3000/http",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "agentic-dev"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

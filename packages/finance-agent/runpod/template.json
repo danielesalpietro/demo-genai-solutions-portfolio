@@ -1,0 +1,17 @@
+{
+  "name": "finance-agent demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/finance-agent:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 30,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,11434/tcp,6333/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "finance-agent"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

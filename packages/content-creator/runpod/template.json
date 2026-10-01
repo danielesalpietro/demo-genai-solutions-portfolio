@@ -1,0 +1,17 @@
+{
+  "name": "content-creator demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/content-creator:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 30,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,11434/tcp,5002/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "content-creator"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

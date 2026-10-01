@@ -1,0 +1,24 @@
+name: Enhancement
+about: Propose an improvement to an existing demo or repository feature
+labels: ["enhancement", "triage"]
+body:
+  - type: input
+    id: target
+    attributes: {label: Target, description: "Demo name or component (e.g. hello-compose, scripts, CI)"}
+    validations: {required: true}
+  - type: textarea
+    id: problem
+    attributes: {label: Problem or gap, description: What is currently missing or not working well?}
+    validations: {required: true}
+  - type: textarea
+    id: proposal
+    attributes: {label: Proposed change, description: What should change and why?}
+    validations: {required: true}
+  - type: textarea
+    id: acceptance
+    attributes: {label: Acceptance criteria, description: Use a verifiable checklist}
+    validations: {required: true}
+  - type: textarea
+    id: alternatives
+    attributes: {label: Alternatives considered}
+    validations: {required: false}

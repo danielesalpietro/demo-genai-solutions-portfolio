@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Demo Package Manifest",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": {"const": "demo-package/v1"},
+    "kind": {"const": "Package"},
+    "metadata": {
+      "type": "object",
+      "required": ["name", "demo", "version"],
+      "properties": {
+        "name": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "demo": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "version": {"type": "string"},
+        "description": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": ["status", "tier", "gpu", "ports", "diskGB"],
+      "properties": {
+        "status": {"enum": ["candidate", "develop", "ready-to-use", "deprecated"]},
+        "tier": {"type": "integer", "minimum": 0, "maximum": 4},
+        "gpu": {
+          "type": "object",
+          "required": ["required"],
+          "properties": {
+            "required": {"type": "boolean"},
+            "minVRAMGB": {"type": "integer", "minimum": 0},
+            "recommendedVRAMGB": {"type": "integer", "minimum": 0}
+          },
+          "additionalProperties": false
+        },
+
+        "inference": {
+          "description": "LLM inference backend configuration. Omit for demos that use no LLM.",
+          "type": "object",
+          "required": ["defaultBackend"],
+          "properties": {
+            "defaultBackend": {
+              "description": "Which backend is used when INFERENCE_BACKEND env var is not set.",
+              "enum": ["ollama", "vllm", "api"]
+            },
+
+            "ollama": {
+              "description": "Ollama serving — models pulled at startup from the Ollama library.",
+              "type": "object",
+              "properties": {
+                "rtx3090Model":   {"type": "string", "description": "Model tag for RTX 3090 24 GB tier"},
+                "rtx5060tiModel": {"type": "string", "description": "Model tag for RTX 5060 Ti 16 GB tier"},
+                "cpuModel":       {"type": "string", "description": "Model tag for CPU-only deployment"}
+              },
+              "additionalProperties": false
+            },
+
+            "vllm": {
+              "description": "vLLM serving with optional CPU offload for models exceeding VRAM capacity.",
+              "type": "object",
+              "required": ["model"],
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "description": "HuggingFace model ID (e.g. mistralai/Mistral-Nemo-Instruct-2407)"
+                },
+                "cpuOffloadGB": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "GB of model weights to offload to CPU RAM (--cpu-offload-gb)"
+                },
+                "gpuMemoryUtilization": {
+                  "type": "number",
+                  "minimum": 0.1,
+                  "maximum": 1.0,
+                  "description": "Fraction of GPU VRAM to reserve for KV cache (--gpu-memory-utilization)"
+                },
+                "quantization": {
+                  "type": "string",
+                  "enum": ["awq", "gptq", "bitsandbytes", "fp8", "none"],
+                  "description": "Quantization method (--quantization)"
+                },
+                "maxModelLen": {
+                  "type": "integer",
+                  "minimum": 512,
+                  "description": "Max context length tokens (--max-model-len)"
+                },
+                "dtype": {
+                  "type": "string",
+                  "enum": ["auto", "float16", "bfloat16", "float32"],
+                  "description": "Weight dtype (--dtype)"
+                }
+              },
+              "additionalProperties": false
+            },
+
+            "api": {
+              "description": "Remote inference API (OpenAI-compatible). No local GPU required.",
+              "type": "object",
+              "required": ["provider", "model", "baseUrl", "keySecret"],
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": ["mistral", "runpod-serverless", "together", "openai-compatible"],
+                  "description": "API provider identity"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Model name as expected by the provider API"
+                },
+                "baseUrl": {
+                  "type": "string",
+                  "description": "Base URL of the OpenAI-compatible endpoint"
+                },
+                "keySecret": {
+                  "type": "string",
+                  "description": "Name of the env var / secret holding the API key"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "ports": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1, "maximum": 65535},
+          "uniqueItems": true
+        },
+        "diskGB": {"type": "integer", "minimum": 1},
+        "volumeGB": {"type": "integer", "minimum": 0},
+        "runpod": {
+          "type": "object",
+          "properties": {
+            "gpuTypes": {"type": "array", "items": {"type": "string"}},
+            "containerDiskGB": {"type": "integer"},
+            "volumeGB": {"type": "integer"},
+            "httpPorts": {"type": "string"},
+            "tcpPorts": {"type": "string"}
+          },
+          "additionalProperties": false
+        },
+        "vastai": {
+          "type": "object",
+          "properties": {
+            "gpuModel": {"type": "string"},
+            "diskGB": {"type": "integer"},
+            "inetUpMbps": {"type": "integer"},
+            "inetDownMbps": {"type": "integer"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

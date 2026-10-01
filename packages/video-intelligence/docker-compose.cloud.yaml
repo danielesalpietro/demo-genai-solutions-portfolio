@@ -1,0 +1,45 @@
+# Cloud override for video-intelligence
+# Merges with demos/video-intelligence/compose.yaml via: docker compose -f demos/video-intelligence/compose.yaml -f packages/video-intelligence/docker-compose.cloud.yaml up -d
+# GPU recommended (min 16 GB). Sets cloud-appropriate env defaults; bind-mounts /workspace for persistence.
+services:
+  ollama:
+    environment:
+      OLLAMA_NUM_PARALLEL: "2"
+      OLLAMA_FLASH_ATTENTION: "1"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - /workspace/ollama:/root/.ollama
+  app:
+    volumes:
+      - /workspace/data:/app/data
+  vllm:
+    image: vllm/vllm-openai:latest
+    profiles: [vllm]
+    command: >
+      --model ${VLLM_MODEL:-llava-hf/llava-v1.6-vicuna-13b-hf}
+      --cpu-offload-gb ${VLLM_CPU_OFFLOAD_GB:-10}
+      --gpu-memory-utilization ${VLLM_GPU_MEMORY_UTILIZATION:-0.75}
+      --quantization ${VLLM_QUANTIZATION:-awq}
+      --max-model-len ${VLLM_MAX_MODEL_LEN:-4096}
+      --dtype ${VLLM_DTYPE:-bfloat16}
+      --served-model-name local-model
+    ports:
+      - "11434:8000"
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - /workspace/vllm-models:/root/.cache/huggingface
+    environment:
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}

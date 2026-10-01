@@ -16,3 +16,14 @@ spec:
     privilegedContainers: false
     defaultCredentialsAllowed: false
     secretsFromEnvironment: true
+  requirements:
+    docker: ">= 27"
+    compose: ">= 2.20"
+    memoryGB: 1
+    gpuRequired: false
+  ports:
+    - 18080
+  validation:
+    composeConfig: true
+    healthChecks: true
+    smokeTest: true

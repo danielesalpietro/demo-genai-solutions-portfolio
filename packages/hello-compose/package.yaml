@@ -1,0 +1,25 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: hello-compose
+  demo: hello-compose
+  version: "0.1.0"
+  description: Reference demo — nginx static page; validates Docker Compose contract.
+spec:
+  status: ready-to-use
+  tier: 0
+  gpu:
+    required: false
+  ports: [18080]
+  diskGB: 5
+  runpod:
+    gpuTypes: []
+    containerDiskGB: 10
+    volumeGB: 0
+    httpPorts: "18080"
+    tcpPorts: ""
+  vastai:
+    gpuModel: ""
+    diskGB: 10
+    inetUpMbps: 100
+    inetDownMbps: 200

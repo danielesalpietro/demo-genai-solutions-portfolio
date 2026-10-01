@@ -1,0 +1,29 @@
+name: Security finding (non-sensitive)
+about: Report a non-sensitive security configuration or compliance issue. For vulnerabilities, use SECURITY.md.
+labels: ["security", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Do not report sensitive vulnerabilities or credential exposures here.**
+        Follow the private disclosure process in [SECURITY.md](../SECURITY.md) instead.
+  - type: input
+    id: component
+    attributes: {label: Affected component, description: "Demo name, workflow, or file"}
+    validations: {required: true}
+  - type: textarea
+    id: finding
+    attributes: {label: Finding, description: Describe the configuration gap or compliance issue}
+    validations: {required: true}
+  - type: textarea
+    id: impact
+    attributes: {label: Potential impact}
+    validations: {required: true}
+  - type: textarea
+    id: remediation
+    attributes: {label: Suggested remediation}
+    validations: {required: false}
+  - type: textarea
+    id: acceptance
+    attributes: {label: Acceptance criteria}
+    validations: {required: true}

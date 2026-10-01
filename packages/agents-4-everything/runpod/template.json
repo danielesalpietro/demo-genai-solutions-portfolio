@@ -1,0 +1,17 @@
+{
+  "name": "agents-4-everything demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/agents-4-everything:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 30,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,11434/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "agents-4-everything"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

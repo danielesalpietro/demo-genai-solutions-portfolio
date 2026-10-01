@@ -1,0 +1,35 @@
+name: Scheduled maintenance
+on:
+  schedule:
+    - cron: '0 5 * * 1'   # weekly on Monday 05:00 UTC
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  stale-demo-detection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Detect demos not run recently
+        run: |
+          set -euo pipefail
+          # Check for demos whose last smoke run is older than 60 days
+          # This is a placeholder: in a full implementation, query CI run history via gh API
+          echo "Stale demo detection — placeholder (implement with gh run list)"
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Check Markdown links
+        run: bash scripts/check-links.sh || true
+
+  image-currency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: List pinned images
+        run: |
+          echo "Pinned images in demos:"
+          find demos -name 'compose.yaml' -exec grep -h 'image:' {} \; | sort -u

@@ -1,0 +1,46 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: software-modernisation
+  demo: software-modernisation
+  version: "0.1.0"
+  description: Software Modernisation — OpenRewrite + LangGraph for automated code migration.
+spec:
+  status: candidate
+  tier: 2
+  gpu:
+    required: false
+    minVRAMGB: 8
+    recommendedVRAMGB: 16
+  inference:
+    defaultBackend: ollama
+    ollama:
+      rtx3090Model: "qwen2.5-coder:14b-instruct-q4_K_M"
+      rtx5060tiModel: "qwen2.5-coder:7b-instruct-q4_K_M"
+      cpuModel: "qwen2.5-coder:7b-instruct-q4_K_M"
+    vllm:
+      model: "Qwen/Qwen2.5-Coder-14B-Instruct"
+      cpuOffloadGB: 8
+      gpuMemoryUtilization: 0.80
+      quantization: "awq"
+      maxModelLen: 32768
+      dtype: bfloat16
+    api:
+      provider: mistral
+      model: "codestral-latest"
+      baseUrl: "https://api.mistral.ai/v1"
+      keySecret: "MISTRAL_API_KEY"
+  ports: [7860, 11434]
+  diskGB: 30
+  volumeGB: 10
+  runpod:
+    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX 3090"]
+    containerDiskGB: 30
+    volumeGB: 10
+    httpPorts: "7860"
+    tcpPorts: "11434"
+  vastai:
+    gpuModel: "RTX_5060_Ti"
+    diskGB: 30
+    inetUpMbps: 100
+    inetDownMbps: 200

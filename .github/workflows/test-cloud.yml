@@ -1,0 +1,125 @@
+name: Cloud GPU Test
+
+# Manually triggered cloud test: spin up RunPod or Vast.ai instance,
+# run demos/<demo>/test.sh, retrieve logs and artifacts, destroy instance.
+#
+# Artifacts published to GitHub Actions under test-results/<demo>/
+
+on:
+  workflow_dispatch:
+    inputs:
+      demo:
+        description: Demo name (must have packages/<demo>/ and demos/<demo>/test.sh)
+        required: true
+        type: string
+      platform:
+        description: Cloud GPU platform
+        required: true
+        default: runpod
+        type: choice
+        options: [runpod, vastai]
+      gpu:
+        description: GPU tier
+        required: false
+        default: rtx5060ti
+        type: choice
+        options: [cpu, rtx5060ti, rtx3090]
+
+  # Can also be called from package-<demo>.yml when action=cloud-test
+  workflow_call:
+    inputs:
+      demo:
+        required: true
+        type: string
+      platform:
+        required: false
+        type: string
+        default: runpod
+      gpu:
+        required: false
+        type: string
+        default: rtx5060ti
+    secrets:
+      RUNPOD_API_KEY:
+        required: false
+      VAST_AI_API_KEY:
+        required: false
+
+permissions:
+  contents: read
+  actions: write  # upload artifacts
+
+jobs:
+  validate-package:
+    name: Validate package manifest
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install check-jsonschema
+        run: pip install check-jsonschema==0.29.3
+      - name: Validate
+        run: |
+          check-jsonschema \
+            --schemafile schemas/package.schema.json \
+            packages/${{ inputs.demo }}/package.yaml
+
+  cloud-test:
+    name: Run tests on ${{ inputs.platform }} (${{ inputs.gpu }})
+    needs: validate-package
+    runs-on: ubuntu-22.04
+    environment: cloud-gpu
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install deps (python3, sshpass, vastai)
+        run: |
+          sudo apt-get install -y -qq openssh-client python3
+          if [[ "${{ inputs.platform }}" == "vastai" ]]; then
+            pip install --quiet vastai
+          fi
+
+      - name: Make scripts executable
+        run: chmod +x scripts/test-cloud.sh scripts/deploy-runpod.sh scripts/deploy-vastai.sh
+
+      - name: Run cloud test
+        id: cloud_test
+        env:
+          RUNPOD_API_KEY: ${{ secrets.RUNPOD_API_KEY }}
+          VAST_AI_API_KEY: ${{ secrets.VAST_AI_API_KEY }}
+        run: |
+          ./scripts/test-cloud.sh \
+            "${{ inputs.demo }}" \
+            "${{ inputs.platform }}" \
+            "${{ inputs.gpu }}"
+        continue-on-error: true  # always upload artifacts even on failure
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        if: always()
+        with:
+          name: test-results-${{ inputs.demo }}-${{ inputs.platform }}-${{ inputs.gpu }}
+          path: test-results/${{ inputs.demo }}/
+          retention-days: 30
+
+      - name: Report test result
+        if: always()
+        run: |
+          summary="test-results/${{ inputs.demo }}/summary.json"
+          if [[ -f "$summary" ]]; then
+            echo "### Cloud Test Summary" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat "$summary" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          log="test-results/${{ inputs.demo }}/run.log"
+          if [[ -f "$log" ]]; then
+            echo "### Last 50 lines of test log" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            tail -50 "$log" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Propagate exit code
+        if: steps.cloud_test.outcome == 'failure'
+        run: exit 1

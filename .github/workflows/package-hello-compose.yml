@@ -1,0 +1,37 @@
+name: Package · hello-compose
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "validate | build | deploy-runpod | deploy-vastai"
+        required: false
+        default: validate
+        type: choice
+        options: [validate, build, deploy-runpod, deploy-vastai]
+      gpu:
+        description: "GPU tier (cpu for this demo)"
+        required: false
+        default: cpu
+        type: choice
+        options: [cpu, rtx5060ti, rtx3090]
+      tag:
+        description: Docker image tag
+        required: false
+        default: latest
+        type: string
+  push:
+    paths:
+      - "demos/hello-compose/**"
+      - "packages/hello-compose/**"
+    branches: [develop]
+
+jobs:
+  package:
+    uses: ./.github/workflows/_package-build.yml
+    with:
+      demo: hello-compose
+      action: ${{ inputs.action || 'validate' }}
+      gpu: ${{ inputs.gpu || 'cpu' }}
+      tag: ${{ inputs.tag || 'latest' }}
+    secrets: inherit

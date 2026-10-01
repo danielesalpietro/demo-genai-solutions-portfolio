@@ -1,0 +1,17 @@
+{
+  "name": "private-rag demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/private-rag:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 50,
+  "volumeGB": 30,
+  "volumeMountPath": "/workspace",
+  "ports": "3000/http,11434/tcp,6333/tcp,6334/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "private-rag"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

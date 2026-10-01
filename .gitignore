@@ -1,6 +1,15 @@
 .env
+.env.local
 *.log
 .DS_Store
 .idea/
 .vscode/
 coverage/
+
+# Credential files — cleartext, never committed
+**/secrets/logical-access.json
+**/secrets/*.pem
+**/secrets/*.key
+**/secrets/*.p12
+# Decrypted password scratch files (created during edit operations)
+**/secrets/.passwords-*.tmp

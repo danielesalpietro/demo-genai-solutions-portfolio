@@ -1,0 +1,16 @@
+{
+  "name": "visual-inspection demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/visual-inspection:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 20,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,8080/http",
+  "env": [
+    {"key": "DEMO", "value": "visual-inspection"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

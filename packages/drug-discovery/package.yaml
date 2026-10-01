@@ -1,0 +1,28 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: drug-discovery
+  demo: drug-discovery
+  version: "0.1.0"
+  description: Drug Discovery — DeepChem molecular property prediction; CPU viable for 100-1000 molecules.
+spec:
+  status: candidate
+  tier: 3
+  gpu:
+    required: false
+    minVRAMGB: 0
+    recommendedVRAMGB: 8
+  ports: [8888, 7860]
+  diskGB: 20
+  volumeGB: 5
+  runpod:
+    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX 3090", "NVIDIA T4"]
+    containerDiskGB: 20
+    volumeGB: 5
+    httpPorts: "8888,7860"
+    tcpPorts: ""
+  vastai:
+    gpuModel: "RTX_5060_Ti"
+    diskGB: 20
+    inetUpMbps: 100
+    inetDownMbps: 200

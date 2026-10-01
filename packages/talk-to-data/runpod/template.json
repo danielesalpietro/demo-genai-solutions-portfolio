@@ -1,0 +1,17 @@
+{
+  "name": "talk-to-data demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/talk-to-data:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 30,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "8000/http,7860/http,5432/tcp,11434/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "talk-to-data"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

@@ -1,0 +1,10 @@
+{
+  "image": "ubuntu:22.04",
+  "diskGB": 5,
+  "gpuModel": "",
+  "minRAMGB": 8,
+  "inetUpMbps": 100,
+  "inetDownMbps": 500,
+  "env": ["DEMO=hello-compose"],
+  "onstart": "bash /workspace/hello-compose/packages/hello-compose/setup.sh"
+}

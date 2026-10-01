@@ -1,0 +1,17 @@
+{
+  "name": "speech-intelligence demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/speech-intelligence:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 20,
+  "volumeGB": 10,
+  "volumeMountPath": "/workspace",
+  "ports": "8000/http,9090/http,7860/http,11434/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx5060ti"},
+    {"key": "DEMO", "value": "speech-intelligence"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

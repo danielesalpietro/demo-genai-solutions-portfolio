@@ -1,0 +1,32 @@
+name: Dependency update
+about: Update an image, package, or GitHub Action version
+labels: ["dependency", "triage"]
+body:
+  - type: input
+    id: dependency
+    attributes: {label: Dependency name, description: "Image, package, or Action (e.g. nginx, actions/checkout)"}
+    validations: {required: true}
+  - type: input
+    id: current_version
+    attributes: {label: Current version}
+    validations: {required: true}
+  - type: input
+    id: target_version
+    attributes: {label: Target version}
+    validations: {required: true}
+  - type: textarea
+    id: reason
+    attributes: {label: Reason, description: Security fix, feature, compatibility}
+    validations: {required: true}
+  - type: textarea
+    id: affected
+    attributes: {label: Affected demos or files}
+    validations: {required: true}
+  - type: textarea
+    id: security
+    attributes: {label: CVE or security notes, description: Trivy scan result or CVE reference if applicable}
+    validations: {required: false}
+  - type: textarea
+    id: acceptance
+    attributes: {label: Acceptance criteria}
+    validations: {required: true}

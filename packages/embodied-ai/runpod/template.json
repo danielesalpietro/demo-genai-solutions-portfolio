@@ -1,0 +1,17 @@
+{
+  "name": "embodied-ai demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/embodied-ai:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 50,
+  "volumeGB": 20,
+  "volumeMountPath": "/workspace",
+  "ports": "8080/http,7860/http",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx3090"},
+    {"key": "DEMO", "value": "embodied-ai"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

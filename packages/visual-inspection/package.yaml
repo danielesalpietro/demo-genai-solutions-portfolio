@@ -1,0 +1,28 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: visual-inspection
+  demo: visual-inspection
+  version: "0.1.0"
+  description: Visual Inspection — AI-based defect detection with PaDiM (CPU) / EfficientAD (GPU).
+spec:
+  status: candidate
+  tier: 2
+  gpu:
+    required: false
+    minVRAMGB: 4
+    recommendedVRAMGB: 8
+  ports: [7860, 8080]
+  diskGB: 20
+  volumeGB: 10
+  runpod:
+    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX 3090", "NVIDIA T4"]
+    containerDiskGB: 20
+    volumeGB: 10
+    httpPorts: "7860,8080"
+    tcpPorts: ""
+  vastai:
+    gpuModel: "RTX_5060_Ti"
+    diskGB: 20
+    inetUpMbps: 100
+    inetDownMbps: 200

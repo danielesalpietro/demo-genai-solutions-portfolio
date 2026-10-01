@@ -36,6 +36,31 @@
             "secretsFromEnvironment": {"const": true}
           },
           "additionalProperties": false
+        },
+        "requirements": {
+          "type": "object",
+          "properties": {
+            "docker": {"type": "string", "description": "Minimum Docker version, e.g. '>= 27'"},
+            "compose": {"type": "string", "description": "Minimum Compose version, e.g. '>= 2.30'"},
+            "memoryGB": {"type": "number", "minimum": 1},
+            "diskGB": {"type": "number", "minimum": 0},
+            "gpuRequired": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "ports": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1, "maximum": 65535},
+          "uniqueItems": true
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "composeConfig": {"type": "boolean"},
+            "healthChecks": {"type": "boolean"},
+            "smokeTest": {"type": "boolean"}
+          },
+          "additionalProperties": false
         }
       },
       "additionalProperties": true

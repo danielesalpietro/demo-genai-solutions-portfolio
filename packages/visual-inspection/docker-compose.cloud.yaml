@@ -1,0 +1,14 @@
+# Cloud override for visual-inspection
+# Merges with demos/visual-inspection/compose.yaml via: docker compose -f demos/visual-inspection/compose.yaml -f packages/visual-inspection/docker-compose.cloud.yaml up -d
+# Sets cloud-appropriate env defaults; bind-mounts /workspace/data for persistence.
+services:
+  app:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - /workspace/data:/app/data

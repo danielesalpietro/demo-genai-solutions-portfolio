@@ -1,0 +1,39 @@
+name: Stale demo detection
+on:
+  schedule:
+    - cron: '0 6 1 * *'   # monthly on the 1st at 06:00 UTC
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  monthly-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        demo: [hello-compose]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - name: Run smoke test
+        id: smoke
+        run: make smoke DEMO=${{ matrix.demo }}
+        continue-on-error: true
+      - name: Cleanup
+        if: always()
+        run: demos/${{ matrix.demo }}/reset.sh || true
+      - name: Open Issue on failure
+        if: steps.smoke.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Monthly smoke failure: ${{ matrix.demo }}" \
+            --label "bug,maintenance" \
+            --body "The monthly smoke test for **${{ matrix.demo }}** failed on $(date -u +%Y-%m-%d).
+
+            Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please investigate and update the demo lifecycle status if it can no longer be maintained." \
+            || echo "Issue creation failed (may already exist)"

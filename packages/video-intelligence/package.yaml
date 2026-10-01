@@ -1,0 +1,46 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: video-intelligence
+  demo: video-intelligence
+  version: "0.1.0"
+  description: Video Intelligence — VideoAgent + faster-whisper + LLaVA 1.6 multi-modal analysis.
+spec:
+  status: candidate
+  tier: 3
+  gpu:
+    required: false
+    minVRAMGB: 16
+    recommendedVRAMGB: 24
+  inference:
+    defaultBackend: ollama
+    ollama:
+      rtx3090Model: "llava:13b-v1.6-vicuna-q4_K_M"
+      rtx5060tiModel: "llava:7b-v1.6-mistral-q4_K_M"
+      cpuModel: "llava:7b-v1.6-mistral-q4_K_M"
+    vllm:
+      model: "llava-hf/llava-v1.6-vicuna-13b-hf"
+      cpuOffloadGB: 10
+      gpuMemoryUtilization: 0.75
+      quantization: "awq"
+      maxModelLen: 4096
+      dtype: bfloat16
+    api:
+      provider: mistral
+      model: "pixtral-large-latest"
+      baseUrl: "https://api.mistral.ai/v1"
+      keySecret: "MISTRAL_API_KEY"
+  ports: [7860, 11434]
+  diskGB: 50
+  volumeGB: 20
+  runpod:
+    gpuTypes: ["NVIDIA RTX 3090", "NVIDIA A100 80GB PCIe"]
+    containerDiskGB: 50
+    volumeGB: 20
+    httpPorts: "7860"
+    tcpPorts: "11434"
+  vastai:
+    gpuModel: "RTX_3090"
+    diskGB: 50
+    inetUpMbps: 200
+    inetDownMbps: 500

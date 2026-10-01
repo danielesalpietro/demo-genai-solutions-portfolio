@@ -1,0 +1,16 @@
+{
+  "name": "drug-discovery demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/drug-discovery:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 20,
+  "volumeGB": 5,
+  "volumeMountPath": "/workspace",
+  "ports": "8888/http,7860/http",
+  "env": [
+    {"key": "DEMO", "value": "drug-discovery"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

@@ -1,0 +1,17 @@
+{
+  "name": "video-intelligence demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/video-intelligence:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 50,
+  "volumeGB": 20,
+  "volumeMountPath": "/workspace",
+  "ports": "7860/http,11434/tcp",
+  "env": [
+    {"key": "GPU_TIER", "value": "rtx3090"},
+    {"key": "DEMO", "value": "video-intelligence"}
+  ],
+  "gpuCount": 1,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}

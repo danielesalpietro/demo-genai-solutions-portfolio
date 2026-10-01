@@ -1,0 +1,7 @@
+# Cloud override for hello-compose
+# Merges with demos/hello-compose/compose.yaml via: docker compose -f demos/hello-compose/compose.yaml -f packages/hello-compose/docker-compose.cloud.yaml up -d
+# Sets cloud-appropriate port mapping.
+services:
+  nginx:
+    ports:
+      - "18080:80"

@@ -1,0 +1,37 @@
+name: Package · agents-4-everything
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "validate | build | deploy-runpod | deploy-vastai"
+        required: false
+        default: validate
+        type: choice
+        options: [validate, build, deploy-runpod, deploy-vastai]
+      gpu:
+        description: GPU tier
+        required: false
+        default: rtx5060ti
+        type: choice
+        options: [cpu, rtx5060ti, rtx3090]
+      tag:
+        description: Docker image tag
+        required: false
+        default: latest
+        type: string
+  push:
+    paths:
+      - "demos/agents-4-everything/**"
+      - "packages/agents-4-everything/**"
+    branches: [develop]
+
+jobs:
+  package:
+    uses: ./.github/workflows/_package-build.yml
+    with:
+      demo: agents-4-everything
+      action: ${{ inputs.action || 'validate' }}
+      gpu: ${{ inputs.gpu || 'rtx5060ti' }}
+      tag: ${{ inputs.tag || 'latest' }}
+    secrets: inherit

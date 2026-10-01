@@ -1,0 +1,46 @@
+apiVersion: demo-package/v1
+kind: Package
+metadata:
+  name: supply-chain-agent
+  demo: supply-chain-agent
+  version: "0.1.0"
+  description: Supply Chain Agent — LangGraph 6-agent pipeline with PostgreSQL inventory.
+spec:
+  status: candidate
+  tier: 2
+  gpu:
+    required: false
+    minVRAMGB: 8
+    recommendedVRAMGB: 16
+  inference:
+    defaultBackend: ollama
+    ollama:
+      rtx3090Model: "mistral-small3.1:24b-instruct-2503-q4_K_M"
+      rtx5060tiModel: "mistral-nemo:12b-instruct-2407-q4_K_M"
+      cpuModel: "mistral:7b-instruct-q4_K_M"
+    vllm:
+      model: "mistralai/Mistral-Small-3.1-24B-Instruct-2503"
+      cpuOffloadGB: 8
+      gpuMemoryUtilization: 0.80
+      quantization: "awq"
+      maxModelLen: 32768
+      dtype: bfloat16
+    api:
+      provider: mistral
+      model: "mistral-small-latest"
+      baseUrl: "https://api.mistral.ai/v1"
+      keySecret: "MISTRAL_API_KEY"
+  ports: [7860, 11434, 5432]
+  diskGB: 30
+  volumeGB: 10
+  runpod:
+    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX 3090"]
+    containerDiskGB: 30
+    volumeGB: 10
+    httpPorts: "7860"
+    tcpPorts: "11434,5432"
+  vastai:
+    gpuModel: "RTX_5060_Ti"
+    diskGB: 30
+    inetUpMbps: 100
+    inetDownMbps: 200

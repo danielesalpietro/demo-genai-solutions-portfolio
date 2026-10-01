@@ -1,0 +1,10 @@
+{
+  "image": "pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime",
+  "diskGB": 30,
+  "gpuModel": "RTX_5060_Ti",
+  "minRAMGB": 8,
+  "inetUpMbps": 100,
+  "inetDownMbps": 500,
+  "env": ["GPU_TIER=rtx5060ti", "DEMO=supply-chain-agent"],
+  "onstart": "bash /workspace/supply-chain-agent/packages/supply-chain-agent/setup.sh"
+}

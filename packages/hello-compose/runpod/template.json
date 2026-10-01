@@ -1,0 +1,16 @@
+{
+  "name": "hello-compose demo",
+  "imageName": "ghcr.io/{{GHCR_OWNER}}/demo-genai-solutions-portfolio/hello-compose:latest",
+  "dockerArgs": "",
+  "containerDiskGB": 5,
+  "volumeGB": 0,
+  "volumeMountPath": "/workspace",
+  "ports": "18080/http",
+  "env": [
+    {"key": "DEMO", "value": "hello-compose"}
+  ],
+  "gpuCount": 0,
+  "startJupyter": false,
+  "startSsh": true,
+  "supportPublicIp": true
+}
