@@ -13,3 +13,7 @@ coverage/
 **/secrets/*.p12
 # Decrypted password scratch files (created during edit operations)
 **/secrets/.passwords-*.tmp
+
+# Local lab reference doc — contains connection details
+mylab_assets.md
+
