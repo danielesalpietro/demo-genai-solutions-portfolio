@@ -137,3 +137,13 @@ These roles are only activated for tasks that require direct system access:
 | `network-agent` | DNS, VPC routing, load balancer config |
 
 Remote operative sessions have MCP access only to the local system tools on their target machine. They do not have GitHub write access unless the operator explicitly provides a token.
+
+### Operator → Supervisor sync rule
+
+**Any change committed by the operator or the main session that was not requested by the Supervisor must be relayed to the Supervisor before the next handoff dispatch.**
+
+Rationale: the Supervisor builds its plan from logbooks and result files. A commit it did not request creates a gap in its context (split-brain). The relay can be:
+- A `SendMessage` to the active Supervisor session, or
+- An entry manually appended to `agents/logbooks/logbook_supervisor.md` describing what was changed and why.
+
+This rule applies to: infrastructure file updates, protocol doc changes, hotfixes, and any direct commits on the working branch outside of handoff tasks.

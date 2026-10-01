@@ -107,3 +107,26 @@ Append one entry per meaningful action. Commit after appending.
 **Waiting for**: `handoff_script-engineer_20261001_003.result.md`, `handoff_security-reviewer_20261001_005.result.md`
 
 ---
+
+## 2026-10-01T00:00Z — operator-sync: infrastructure and protocol commits
+
+**Source**: main session (operator) — not a handoff task.
+**Commits made directly**:
+- `96d22d5` — `docs(supervisor): add Where field to dispatch template` — extended SPECIALIST SESSION NEEDED block with a "Where" line (local desktop-app tab / WSL2 with Docker / cloud) derived from handoff system requirements.
+- `9ae4b14` — `docs(agents): add infrastructure registry and z8g4 server context` — created `agents/infrastructure.md` with HP Z8 G4 / berlin-3eie full hardware inventory (GPUs, NUMA, storage, Docker, SSH). Added `remote:z8g4` execution context and pre-setup notes.
+- `b21cf4c` — expanded `agents/infrastructure.md` with `/workspace` confirmed operational (T3 validation ran on berlin-3eie).
+- (in-progress) — `AGENTS.md` updated with Operator→Supervisor sync rule.
+
+**Context added**:
+- Z8 G4 = hostname `berlin-3eie`, IP `192.168.1.110`, user `admin`, SSH key on operator workstation.
+- GPU 0 RTX 3090 24 GB NUMA 0 → Ollama; GPU 1 RTX 5060 Ti 16 GB NUMA 1 → vLLM.
+- `/workspace` on `/mnt/wdc-docker/workspace` (574 GB free) — confirmed operational.
+- `mylab_assets.md` is gitignored, local only; full hardware survey available to all sessions on disk.
+- New protocol rule: operator commits must be relayed to Supervisor to prevent split-brain.
+
+**Impact on active tasks**:
+- T3 ✅ already used berlin-3eie for validation — no change needed.
+- T5 (security-reviewer): new context — must also check `agents/infrastructure.md` for any inadvertently committed sensitive data (IP is acceptable; key path was never committed here, only in the gitignored mylab_assets.md).
+- T6 (test-engineer): `berlin-3eie` is the validated test target; `/workspace` is ready.
+
+---

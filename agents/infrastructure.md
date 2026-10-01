@@ -52,15 +52,10 @@ gitignored) for full hardware survey and per-asset planning notes.
 | `/dev/nvme0n1` | 894 GB | unmounted | Available for model storage |
 | `/dev/nvme1n1` | 476 GB | unmounted | Available for model storage |
 
-**Pre-run setup required** (not yet done — see open action items):
-```bash
-sudo mkdir -p /mnt/wdc-docker/workspace
-sudo ln -s /mnt/wdc-docker/workspace /workspace
-sudo chown admin:admin /workspace
-```
+**Pre-run setup**: `/workspace` confirmed operational (T3 script-engineer ran 15 contract tests there on 2026-10-01).
 
 **Open action items** (tracked here for linux-agent dispatch):
-- [ ] Create `/workspace` symlink to `/mnt/wdc-docker/workspace`
+- [x] Create `/workspace` symlink to `/mnt/wdc-docker/workspace` _(done — T3 confirmed)_
 - [ ] Mount `/dev/nvme0n1` (894 GB) for model storage
 - [ ] Mount `/dev/nvme1n1` (476 GB) for model storage
 - [ ] Prune Docker build cache (60 GB) and stopped containers after validating no active projects
