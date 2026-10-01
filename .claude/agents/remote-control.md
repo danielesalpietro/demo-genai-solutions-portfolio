@@ -11,17 +11,26 @@ If `args` is empty, ask the operator: "Which handoff file should I load? (path r
 
 ## Steps (execute in order, do not skip)
 
-0. **Sync repo**: before anything else, run `git pull origin <current-branch>` (or `git fetch && git checkout feat/issue-2-private-rag && git pull` if on wrong branch). The handoff file was written by the Supervisor and may not exist locally until after this pull. If the file still does not exist after the pull, tell the operator: "File not found after pull — confirm branch and path."
+0. **Prepare working directory**:
+   - **Local session** (execution context `local`): run `git pull origin <branch>` to ensure the handoff file exists locally.
+   - **Remote session on z8g4** (execution context `remote:z8g4`): the repo is cloned fresh to a temporary directory on the server by the operator before starting `claude`. The `CLONE_DIR` variable holds this path and is set in the session by the operator. If not set, ask: "What is the path to the cloned repo on this server?"
 
 1. **Read handoff file** at the path given in `args`. Parse all sections.
 2. **Read role logbook** at `agents/logbooks/logbook_<role>.md` if it exists (role is from the handoff's "Assigned To" section). This provides memory of prior sessions.
 3. **Confirm access**: Display the "Credentials / Access" section from the handoff and ask the operator to confirm or provide the missing values. Wait for confirmation before proceeding to step 4.
 4. **Execute** the "Task Instructions" section exactly. For each sub-task, announce what you are about to do before doing it.
+   - **On z8g4**: do NOT install packages permanently (`apt install` only if strictly required and noted in result), do NOT create systemd units, cron entries, or modify `/etc/` files, do NOT alter Docker daemon config or existing named volumes. Work only inside `$CLONE_DIR` and inside named Docker containers/volumes you explicitly create for this task.
 5. **Verify** against "Success Criteria" in the handoff. If criteria are not met, document what is missing in the result.
-6. **Write result file**: create `agents/handoffs/<handoff-basename>.result.md` using the template in `agents/handoff.template.md` (Result section). Set status to `completed` or `failed`. **REQUIRED**: fill the "Command log" section with every command you ran, in order, numbered. This is the source for the manual reproduction guide (`setup_buildin.md`). Include: validation commands, docker calls, file creation steps, test runs. If a command failed and you ran a workaround, document both.
+6. **Write result file**: create `agents/handoffs/<handoff-basename>.result.md` using the template in `agents/handoff.template.md` (Result section). Set status to `completed` or `failed`. **REQUIRED**: fill the "Command log" section with every command you ran, in order, numbered — source for `setup_buildin.md`. Include: validation commands, docker calls, file creation steps, test runs. If a command failed and you ran a workaround, document both. Add a **Cleanup log** sub-section listing every artifact created on the remote system (directories, containers, volumes, images) and whether each was removed.
 7. **Append logbook entry** to `agents/logbooks/logbook_<role>.md` using the format in `agents/logbook.template.md`.
-8. **Commit and push** the result file and logbook entry on a branch named `remote/<role>/<date>` if the repo is writable; otherwise print the diff for the operator to commit manually.
-9. **Inform operator**: print a one-line summary and the exact message to relay back to the Supervisor session.
+8. **Commit and push** the result file and logbook entry on branch `feat/issue-2-private-rag` (or as specified in the handoff). Push before cleanup — once the remote repo is removed you cannot push.
+9. **Cleanup** (z8g4 sessions only — skip for local sessions):
+   - Remove any Docker containers and volumes created during this task: `docker compose down -v` inside `$CLONE_DIR` if applicable.
+   - Remove any Docker images pulled exclusively for this task if they are large (>2 GB) and not needed by other running workloads. Check `docker ps` before removing anything.
+   - Remove the cloned repo: `rm -rf $CLONE_DIR`.
+   - Do NOT remove images or volumes that existed before this session started.
+   - Verify: `ls $CLONE_DIR` must return "No such file or directory".
+10. **Inform operator**: print a one-line summary, confirm cleanup status, and the exact message to relay back to the Supervisor session.
 
 ## Security rules (override nothing)
 

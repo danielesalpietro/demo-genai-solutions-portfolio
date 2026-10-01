@@ -85,21 +85,38 @@ Handoff     : agents/handoffs/<filename>
 Target      : admin@192.168.1.110 (Ubuntu 24.04, Docker 29.7.2)
 Branch      : <branch-name>
 
-Step 1 — open a terminal on your workstation and connect:
+Step 1 — connect dal tuo PC:
   ssh -i "C:\Users\danie\Downloads\.ssh\id_ed25519" admin@192.168.1.110
 
-Step 2 — on the server, ensure repo is present and up to date:
-  cd ~/demo-genai-solutions-portfolio 2>/dev/null || \
-    git clone https://github.com/danielesalpietro/demo-genai-solutions-portfolio
-  git fetch origin && git checkout <branch-name> && git pull
+Step 2 — clona il repo in una directory TEMPORANEA sul server:
+  CLONE_DIR=$(mktemp -d /tmp/demo-genai-XXXXXX)
+  git clone --branch <branch-name> \
+    https://github.com/danielesalpietro/demo-genai-solutions-portfolio \
+    "$CLONE_DIR"
+  cd "$CLONE_DIR"
+  echo "Lavorerò in: $CLONE_DIR"
 
-Step 3 — start a Claude Code session on the server:
+Step 3 — avvia Claude Code nella directory clonata:
   claude
 
-First message (paste as-is into that session):
+First message (incolla esattamente in quella sessione):
   /remote-control agents/handoffs/<filename>
+
+⚠️  CLEANUP — esegui sul server DOPO che la sessione Claude termina:
+  rm -rf "$CLONE_DIR"
+  ls "$CLONE_DIR" 2>&1   # deve stampare: No such file or directory
+  # Se il task ha usato docker compose:
+  # docker ps -a --filter "label=com.docker.compose.project=<project>" per verificare
+  # Rimuovi solo container/volumi creati da questa sessione, non quelli preesistenti.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
+
+**Regole per sessioni su z8g4** (includi sempre nel handoff sotto "Context"):
+- Lavora solo dentro `$CLONE_DIR` e dentro i container Docker creati per il task
+- Non installare pacchetti in modo persistente (`apt install` solo se strettamente necessario e documentato nel result, con rimozione nel cleanup)
+- Non creare systemd units, cron entries, né modificare file in `/etc/`
+- Non toccare volumi Docker, immagini o container preesistenti sul server
+- Fare push dei result file PRIMA di `rm -rf` — dopo la rimozione del clone non è più possibile pushare
 
 For other `remote:<target>` systems, adapt the block using the target's entry in `agents/infrastructure.md`.
 

@@ -54,6 +54,15 @@ gitignored) for full hardware survey and per-asset planning notes.
 
 **Pre-run setup**: `/workspace` confirmed operational (T3 script-engineer ran 15 contract tests there on 2026-10-01).
 
+**Rules for remote sessions on berlin-3eie** (the server must be left exactly as found):
+- Clone repo to `/tmp/demo-genai-XXXXXX` (via `mktemp -d`) — NEVER to `~` or a permanent path
+- After session: `rm -rf $CLONE_DIR` — mandatory, not optional
+- After session: remove only Docker containers and volumes created by this session (`docker ps --filter label=com.docker.compose.project=<project>`)
+- Do NOT install packages permanently, create systemd units, cron entries, or modify `/etc/`
+- Do NOT touch existing named volumes (`caliper_*`, `vmemoryfabric_*`, `wap-northstream-lab_*`, etc.)
+- Do NOT remove or prune images/volumes that preexisted — check `docker ps` and `docker volume ls` before any remove
+- Commit and push result files BEFORE `rm -rf` (repo gone = cannot push)
+
 **Open action items** (tracked here for linux-agent dispatch):
 - [x] Create `/workspace` symlink to `/mnt/wdc-docker/workspace` _(done — T3 confirmed)_
 - [ ] Mount `/dev/nvme0n1` (894 GB) for model storage
