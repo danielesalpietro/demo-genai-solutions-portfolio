@@ -186,3 +186,20 @@ Append one entry per meaningful action. Commit after appending.
 **Waiting for**: `handoff_documentation-writer_20261001_004.result.md`, `handoff_security-reviewer_20261001_008.result.md`, human decision on Issue #2.
 
 ---
+
+## 2026-10-01T00:00Z — operator-sync: Command log protocol (commit 9ade99d)
+
+**Source**: operator direct commit on `feat/issue-2-private-rag`.
+**Protocol change**: Result files now require a mandatory `### Command log` section — numbered commands with expected outputs, for manual reproduction and audit.
+**Files changed**:
+- `agents/handoff.template.md` — `### Command log` section added to Result block
+- `.claude/agents/remote-control.md` — step 6 requires Command log in result file
+- `agents/handoffs/handoff_documentation-writer_20261001_004.md` — T4 must produce `demos/private-rag/docs/setup_buildin.md` (5-phase structure: Phase 0 prerequisites → Phase 5 e2e test) by reading Command logs from all prior result files
+**Impact on active tasks**:
+- T5b result file: must include Command log (template already updated)
+- T6 result file: must include Command log
+- T4: reads Command logs from T1–T5 result files; can use placeholder for Phase 5 (T6 not yet complete when T4 runs); produces `setup_buildin.md`
+- T1–T3 result files: already committed without Command log — this is acceptable (protocol applied from this commit forward)
+**No immediate Supervisor action required** — awareness logged for T5b and T6 verification.
+
+---
