@@ -203,3 +203,14 @@ Append one entry per meaningful action. Commit after appending.
 **No immediate Supervisor action required** — awareness logged for T5b and T6 verification.
 
 ---
+
+## 2026-10-01T00:00Z — operator-sync: CI fix — packages:write permission (commit ee7db46)
+
+**Source**: operator direct commit on `feat/issue-2-private-rag`.
+**Root cause diagnosed**: All 16 `package-*.yml` workflows were failing with `startup_failure`. GitHub error: "Error calling workflow '_package-build.yml'. The workflow is requesting 'packages: write', but is only allowed 'packages: read'." The reusable `_package-build.yml` declares `packages: write` at workflow level; the 16 callers had no `permissions:` block so they inherited the repo default (`packages: read`), which GitHub rejects at startup.
+**Fix**: Added `permissions: {contents: read, packages: write}` to all 16 `package-<demo>.yml` files.
+**Files changed** (all 16 `package-*.yml` under `.github/workflows/`).
+**Branch**: `feat/issue-2-private-rag` — will land on `develop` when the private-rag PR merges.
+**No Supervisor action required** — CI infrastructure fix; no handoffs affected.
+
+---
