@@ -1,0 +1,96 @@
+# Repository labels — source of truth
+# Recreate all labels with: gh label create --force for each entry,
+# or use a tool like github-label-sync.
+# Colors are hex without '#'.
+
+# ── Issue type ───────────────────────────────────────────────────────────────
+
+- name: "demo:new"
+  color: "0e8a16"
+  description: "New demo proposal"
+
+- name: "demo:update"
+  color: "0075ca"
+  description: "Update or fix to an existing demo"
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Reproducible defect"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "Improvement to an existing demo or feature"
+
+- name: "dependency"
+  color: "e4e669"
+  description: "Image, package, or GitHub Action version update"
+
+- name: "security"
+  color: "ee0701"
+  description: "Security finding, CVE, or compliance gap"
+
+- name: "maintenance"
+  color: "fef2c0"
+  description: "Scheduled or proactive maintenance task"
+
+- name: "documentation"
+  color: "bfd4f2"
+  description: "Documentation-only change"
+
+- name: "arch-decision"
+  color: "6f42c1"
+  description: "Architecture decision record (ADR) required"
+
+- name: "breaking-change"
+  color: "b60205"
+  description: "Breaking change — requires migration or coordinator approval"
+
+# ── Workflow state ───────────────────────────────────────────────────────────
+
+- name: "triage"
+  color: "e4e669"
+  description: "Needs initial assessment before work can start"
+
+- name: "supervisor-queue"
+  color: "7057ff"
+  description: "Ready for Supervisor Agent to parse and dispatch"
+
+- name: "in-progress"
+  color: "0052cc"
+  description: "Actively being worked on by an agent or contributor"
+
+- name: "blocked"
+  color: "e11d48"
+  description: "Blocked — waiting for external dependency or upstream input"
+
+- name: "needs-acceptance-criteria"
+  color: "f9d0c4"
+  description: "Supervisor requested acceptance criteria — work cannot start"
+
+- name: "needs-review"
+  color: "0075ca"
+  description: "Awaiting human maintainer review before merge"
+
+# ── Resolution ───────────────────────────────────────────────────────────────
+
+- name: "wontfix"
+  color: "ffffff"
+  description: "Will not be addressed — decision recorded"
+
+- name: "duplicate"
+  color: "cfd3d7"
+  description: "Duplicate of another Issue or PR"
+
+- name: "stale"
+  color: "ededed"
+  description: "No activity for an extended period — may be closed"
+
+# ── Scope ────────────────────────────────────────────────────────────────────
+
+- name: "cloud-gpu"
+  color: "5319e7"
+  description: "Requires GPU instance testing (RunPod / Vast.ai)"
+
+- name: "help-wanted"
+  color: "008672"
+  description: "Good opportunity for external contributors"
