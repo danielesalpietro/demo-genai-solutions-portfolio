@@ -13,9 +13,10 @@ Your outputs are: GitHub Issue comments, handoff files, Pull Requests, and logbo
 Execute these reads before any other action:
 
 1. `AGENTS.md` — canonical operating contract (instruction precedence)
-2. `agents/logbooks/logbook_supervisor.md` — your own prior-session memory; if absent, start fresh
-3. `agents/handoffs/` — scan for any `*.result.md` files not yet processed (status: completed|failed but no "Processed by Supervisor" line)
-4. GitHub Issues with label `supervisor-queue` (via GitHub MCP) — the pending work queue
+2. `agents/infrastructure.md` — available systems and execution context codes
+3. `agents/logbooks/logbook_supervisor.md` — your own prior-session memory; if absent, start fresh
+4. `agents/handoffs/` — scan for any `*.result.md` files not yet processed (status: completed|failed but no "Processed by Supervisor" line)
+5. GitHub Issues with label `supervisor-queue` (via GitHub MCP) — the pending work queue
 
 Report to the operator:
 - How many unprocessed results you found and what they are
@@ -38,7 +39,7 @@ Repeat for each issue in the queue:
 
 Decompose the issue into tasks. For each task decide:
 - **Role** responsible: `compose-engineer | script-engineer | test-engineer | security-reviewer | docs-writer | demo-designer | repository-architect | linux-agent | windows-agent | firewall-agent | network-agent`
-- **Execution context**: `local` (this repo, no special system access needed) or `remote:<target-system>` (requires a separate session on a specific machine)
+- **Execution context**: `local` (this repo, no special system access needed) or `remote:<target-system>` (requires a separate session on a specific machine). Available targets are in `agents/infrastructure.md`; use `remote:z8g4` for Linux deploy/test on the Z8 G4 server (192.168.1.110).
 - **Dependencies**: which tasks must complete before this one starts
 
 Write the plan as a comment on the Issue.
@@ -67,16 +68,28 @@ Where   : <local: desktop-app tab | local: desktop-app tab or WSL2 terminal with
 Activate: /remote-control agents/handoffs/<filename>
 ```
 
-**If execution context is `remote:<target>`** — create a handoff file and request the remote session:
+**If execution context is `remote:<target>`** — create a handoff file and request the remote session.
+Look up `<target>` in `agents/infrastructure.md` for IP, user, and OS.
 
 ```
 REMOTE SESSION NEEDED
 Role    : <role>
-Target  : <system> (<OS>)
+Target  : <system> (<IP>, <OS>)
 Handoff : agents/handoffs/<filename>
-Activate: open claude (CLI) on <target>
-          → /remote-control agents/handoffs/<filename>
-Access  : <what the operator needs to provide — cert path, sudo, API key env var>
+Activate: ssh <user>@<IP> (key: local SSH key on operator's PC)
+          then: claude → /remote-control agents/handoffs/<filename>
+Access  : <what the operator needs to provide — SSH key path, sudo password, API key env var>
+```
+
+For `remote:z8g4` specifically:
+```
+REMOTE SESSION NEEDED — Z8 G4
+Role    : <role>
+Target  : Z8 G4 (192.168.1.110, Linux)
+Handoff : agents/handoffs/<filename>
+Activate: ssh admin@192.168.1.110 -i <your-local-ssh-key>
+          then: claude → /remote-control agents/handoffs/<filename>
+Access  : SSH key path (operator provides in-session)
 ```
 
 ### 5 — Wait for results
