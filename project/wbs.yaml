@@ -5,8 +5,8 @@
 # Status values: not_started | in_progress | completed | blocked | on_hold | cancelled
 
 schema_version: "1"
-last_updated: "2026-10-01"
-updated_by: "operator+supervisor"
+last_updated: "2026-10-02"
+updated_by: "project-manager"
 
 project:
   id: P01
@@ -55,7 +55,7 @@ deliverables:
     status: completed
     actual_date: "2026-10-01"
     evidence: ".github/workflows/"
-    notes: "validate, smoke, test-cloud, 16 package-*.yml workflows"
+    notes: "validate, smoke, test-cloud, 16 package-*.yml workflows; packages:write permission fix committed to feat/issue-2-private-rag (ee7db46), lands on develop at PR merge"
 
   - id: D03
     epic: E01
@@ -90,10 +90,10 @@ deliverables:
   - id: D07
     epic: E01
     title: "Project management layer (PM agent + WBS)"
-    status: in_progress
-    target_date: "2026-10-01"
-    evidence: "project/wbs.yaml, agents/project-manager.md"
-    notes: "This deliverable — daily reports, change requests, WBS tracking"
+    status: completed
+    actual_date: "2026-10-02"
+    evidence: "project/wbs.yaml, agents/project-manager.md, agents/logbooks/logbook_project-manager.md"
+    notes: "First daily report produced 2026-10-02. Daily cron active."
 
 # ─────────────────────────────────────────────────────────────────
 # DELIVERABLES — E02 Alpha Demos
@@ -238,6 +238,15 @@ tasks:
     actual_date: "2026-10-01"
     evidence: "agents/handoffs/handoff_documentation-writer_20261001_004.result.md"
     notes: "setup_buildin.md missing — T4b needed"
+
+  - id: D11-T1b
+    deliverable: D11
+    title: "Fix rag-net internal:true — Ollama model pull blocked"
+    role: compose-engineer
+    status: not_started
+    depends_on: []
+    evidence: "agents/handoffs/handoff_compose-engineer_20261001_007.md"
+    notes: "One-line fix: remove internal:true from rag-net so containers can reach ollama.com"
 
   - id: D11-T4b
     deliverable: D11
