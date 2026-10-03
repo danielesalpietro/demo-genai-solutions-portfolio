@@ -26,4 +26,4 @@ PM detects deviation
 
 | CR | Title | Status | Opened | GitHub Issue |
 |---|---|---|---|---|
-| _(none yet)_ | | | | |
+| [CR-001](CR-001-qdrant-cve-hold.md) | Security HOLD — qdrant CRITICAL CVEs, decision required | open | 2026-10-03 | [#7](https://github.com/danielesalpietro/demo-genai-solutions-portfolio/issues/7) |

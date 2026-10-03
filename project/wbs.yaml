@@ -5,7 +5,7 @@
 # Status values: not_started | in_progress | completed | blocked | on_hold | cancelled
 
 schema_version: "1"
-last_updated: "2026-10-02"
+last_updated: "2026-10-03"
 updated_by: "project-manager"
 
 project:
@@ -294,10 +294,19 @@ tasks:
 # ─────────────────────────────────────────────────────────────────
 # CHANGE REQUESTS
 # ─────────────────────────────────────────────────────────────────
-change_requests: []
-# Populated by /project-manager when a strategic deviation is detected.
+change_requests:
+  - id: CR-001
+    opened: "2026-10-03"
+    status: open
+    title: "Security HOLD — qdrant CRITICAL CVEs (perl-base), no patched image available"
+    impact: security
+    severity: high
+    affected_tasks: [D11-T5, D11-T6, D11-PR]
+    github_issue: "#7"
+    file: "project/change-requests/CR-001-qdrant-cve-hold.md"
+    decision: null
 # Format per entry:
-#   - id: CR-001
+#   - id: CR-NNN
 #     opened: YYYY-MM-DD
 #     status: open | approved | rejected | deferred
 #     title: short description
