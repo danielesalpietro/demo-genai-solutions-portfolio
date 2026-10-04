@@ -5,7 +5,7 @@
 # Status values: not_started | in_progress | completed | blocked | on_hold | cancelled
 
 schema_version: "1"
-last_updated: "2026-10-03"
+last_updated: "2026-10-04"
 updated_by: "project-manager"
 
 project:
@@ -115,6 +115,7 @@ deliverables:
     issue: "#2"
     branch: "feat/issue-2-private-rag"
     target_date: "2026-10-05"
+    target_date_risk: "HIGH — T6 blocked 3 days; target will be missed; best-case PR 2026-10-07"
 
   - id: D12
     epic: E02
@@ -305,6 +306,18 @@ change_requests:
     github_issue: "#7"
     file: "project/change-requests/CR-001-qdrant-cve-hold.md"
     decision: null
+
+  - id: CR-002
+    opened: "2026-10-04"
+    status: open
+    title: "Timeline — T6 gate check blocked 3 days, target_date 2026-10-05 will be missed"
+    impact: timeline
+    severity: medium
+    affected_tasks: [D11-T6, D11-PR]
+    github_issue: "#8"
+    file: "project/change-requests/CR-002-t6-blocked-timeline.md"
+    decision: null
+    notes: "Resolves with CR-001 — shares same root cause"
 # Format per entry:
 #   - id: CR-NNN
 #     opened: YYYY-MM-DD

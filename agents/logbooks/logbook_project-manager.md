@@ -145,3 +145,64 @@ Append one entry per run. Commit after appending.
 - **2026-10-10**: D11 target_date miss threshold — CR for timeline if PR not open by then
 
 ---
+
+## 2026-10-04T08:03Z — daily report
+
+**last_run**: 2026-10-04T08:03Z
+
+**E01 Platform**: 7/7 deliverables completed (100%)
+**E02 Demos**: 1 in-progress (private-rag), 1 completed (hello-compose)
+**D11 tasks**: T1 ✅ T1b ⏳ T2 ✅ T3 ✅ T4 ✅ T4b 🔜 T5 🔒 T5b ⏳ T6 🔒 PR 🔜
+**Open CRs**: 2 (CR-001 open, CR-002 opened this run)
+
+### Delta since last run (2026-10-03T08:03Z)
+
+| Event | Detail |
+|---|---|
+| No new result files | T5b, T1b still pending — no sessions activated |
+| No supervisor logbook activity | Last entry: 2026-10-01 CI fix |
+| Issue #2 | No human response (escalation posted 2026-10-01) |
+| Issue #7 (CR-001) | OPEN, 0 comments — no decision |
+| **CR-002 opened** | D11-T6 blocked ≥ 3 days — GitHub Issue #8 created |
+
+### Pipeline snapshot
+| Demo | Status | Blocked by |
+|---|---|---|
+| hello-compose | completed | — |
+| private-rag | in_progress | CR-001 & CR-002 pending, T5b no result, T1b not activated |
+
+### Blockers
+- **D11-T5**: HOLD day 3 — CR-001 open (Issue #7), no human decision. **PM escalation: this has now exceeded all protocol thresholds.**
+- **D11-T6**: Blocked day 3 — **CR-002 opened** (Issue #8). Root cause same as CR-001.
+- **D11 target_date 2026-10-05**: Tomorrow. **Will be missed.** Best-case PR: ~2026-10-07 if CR-001 resolved today. Next date-miss CR threshold: 2026-10-10 (target + 5 days).
+- **D11-T5b**: In-progress day 3 — no result from berlin-3eie session yet.
+- **D11-T1b**: Dispatch pending activation day 3 — no hard dependency but adds risk to smoke test.
+
+### CR evaluation
+| Trigger | Days elapsed | Threshold | Status |
+|---|---|---|---|
+| T5 HOLD (security) | 3 days | ≥ 2 days | 🚨 CR-001 open — **ESCALATION ACTIVE** |
+| T6 blocked | 3 days | ≥ 3 days | 🚨 **CR-002 OPENED** (Issue #8) |
+| D11 target_date miss | 0 days (miss tomorrow) | > 5 days late | ⚠️ Pre-miss warning — monitor; CR-003 triggers 2026-10-10 |
+
+### ⚠️ Escalation notice
+
+Both CR-001 and CR-002 share **one root cause**: the CVE decision on Issue #7 (or Issue #2).
+A single human comment — "Option A approved" — on either issue immediately unblocks:
+- D11-T5 HOLD → resolved, exception documented
+- D11-T6 blocked → Supervisor activates T6 same day
+- PR target shift from 2026-10-05 to ~2026-10-07 (net slip: ~2 days)
+
+Without a decision by **end of 2026-10-05**, CR-003 (timeline/high — target_date + 5 days) opens on 2026-10-10.
+
+### Change requests opened this run
+- **CR-002**: Timeline — T6 gate check blocked 3 days, target_date will be missed — [Issue #8](https://github.com/danielesalpietro/demo-genai-solutions-portfolio/issues/8)
+
+### Next expected events
+- **Immediate**: Human decision on Issue #7 (CR-001) → resolves CR-001 + CR-002
+- T5b: Trivy retry result still awaited from berlin-3eie
+- T1b: operator to activate (local, ~15 min)
+- T6: dispatch same day as CR-001 resolution (if T5b complete)
+- **2026-10-10**: CR-003 opens (timeline/high) if PR not submitted by then
+
+---

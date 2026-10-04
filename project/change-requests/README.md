@@ -27,3 +27,4 @@ PM detects deviation
 | CR | Title | Status | Opened | GitHub Issue |
 |---|---|---|---|---|
 | [CR-001](CR-001-qdrant-cve-hold.md) | Security HOLD — qdrant CRITICAL CVEs, decision required | open | 2026-10-03 | [#7](https://github.com/danielesalpietro/demo-genai-solutions-portfolio/issues/7) |
+| [CR-002](CR-002-t6-blocked-timeline.md) | Timeline — T6 gate check blocked 3 days, target_date at risk | open | 2026-10-04 | [#8](https://github.com/danielesalpietro/demo-genai-solutions-portfolio/issues/8) |
