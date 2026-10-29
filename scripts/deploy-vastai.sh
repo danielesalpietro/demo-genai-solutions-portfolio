@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Deploy a demo package to Vast.ai.
 # Usage: ./scripts/deploy-vastai.sh <demo-name> [gpu-tier]
-# gpu-tier: rtx3090 (default) | rtx5060ti | cpu
+# gpu-tier: pro4000 (default) | rtx5060ti | cpu
 # Requires: VAST_AI_API_KEY environment variable; vast CLI installed
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 demo="${1:?Usage: $0 <demo-name> [gpu-tier]}"
-gpu_tier="${2:-rtx3090}"
+gpu_tier="${2:-pro4000}"
 config="$root/packages/$demo/vastai/config.json"
 
 [[ -f "$config" ]] || { echo "ERROR: Vast.ai config not found: $config"; exit 1; }
@@ -17,10 +17,10 @@ vast set api-key "${VAST_AI_API_KEY}" >/dev/null
 
 # Resolve GPU model from tier
 case "$gpu_tier" in
-  rtx3090)   gpu_model="RTX_3090" ;;
+  pro4000)   gpu_model="RTX_PRO_4000" ;;
   rtx5060ti) gpu_model="RTX_5060_Ti" ;;
   cpu)       gpu_model="" ;;
-  *)         echo "ERROR: unknown gpu-tier: $gpu_tier (use rtx3090|rtx5060ti|cpu)"; exit 1 ;;
+  *)         echo "ERROR: unknown gpu-tier: $gpu_tier (use pro4000|rtx5060ti|cpu)"; exit 1 ;;
 esac
 
 # Extract config fields

@@ -39,6 +39,16 @@ The repository is designed to be operated by a team of specialised AI agents (co
 
 Tier reflects implementation complexity. See [`catalog/`](catalog/) for per-demo descriptions, prerequisites, and provenance.
 
+### GPU tiers
+
+Each GPU-accelerated demo supports three tiers via the `GPU_TIER` environment variable:
+
+| Tier | Hardware | VRAM | Notes |
+|---|---|---|---|
+| `cpu` | any | — | Default; slower inference, no GPU required |
+| `rtx5060ti` | NVIDIA RTX 5060 Ti | 16 GB GDDR7 | Mid-range; covers most 7–12B models |
+| `pro4000` | NVIDIA RTX PRO 4000 Blackwell | 24 GB GDDR7 | High-end; covers 24B models and simulation workloads |
+
 ## Quick start
 
 ```bash

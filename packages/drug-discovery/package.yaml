@@ -16,7 +16,7 @@ spec:
   diskGB: 20
   volumeGB: 5
   runpod:
-    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX 3090", "NVIDIA T4"]
+    gpuTypes: ["NVIDIA RTX 5060 Ti", "NVIDIA RTX PRO 4000", "NVIDIA T4"]
     containerDiskGB: 20
     volumeGB: 5
     httpPorts: "8888,7860"

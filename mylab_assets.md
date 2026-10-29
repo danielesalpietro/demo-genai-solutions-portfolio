@@ -58,7 +58,7 @@
 
 | # | Model | VRAM | Compute Cap | Architecture | PCIe slot | NUMA | Power |
 |---|---|---|---|---|---|---|---|
-| GPU 0 | **NVIDIA GeForce RTX 3090** | **24 GB** GDDR6X | 8.6 (Ampere) | GA102 | 2D:00.0 | Node 0 | 350 W cap |
+| GPU 0 | **NVIDIA GeForce RTX PRO 4000** | **24 GB** GDDR6X | 8.6 (Ampere) | GA102 | 2D:00.0 | Node 0 | 350 W cap |
 | GPU 1 | **NVIDIA GeForce RTX 5060 Ti** | **16 GB** | 12.0 (Blackwell) | 2d04 | 99:00.0 | Node 1 | 180 W cap |
 
 | Field | Value |
@@ -71,7 +71,7 @@
 | CDI device | `nvidia.com/gpu=0`, `nvidia.com/gpu=1`, `nvidia.com/gpu=all` |
 
 **NUMA GPU affinity** (important for performance):
-- Ollama / inference on NUMA 0 → prefer `device: 0` (RTX 3090, 24 GB)
+- Ollama / inference on NUMA 0 → prefer `device: 0` (RTX PRO 4000, 24 GB)
 - vLLM on NUMA 1 → prefer `device: 1` (RTX 5060 Ti, 16 GB)
 - Cross-NUMA use is possible but adds PCIe latency
 
@@ -140,13 +140,13 @@
 
 - **Create `/workspace`** before first run: `sudo mkdir -p /workspace && sudo chown admin:admin /workspace`
 - Recommend placing `/workspace` on `/mnt/wdc-docker` (574 GB free): `sudo mkdir -p /mnt/wdc-docker/workspace && sudo ln -s /mnt/wdc-docker/workspace /workspace`
-- **Ollama** (NUMA 0): assign to GPU 0 (RTX 3090, 24 GB) via `CUDA_VISIBLE_DEVICES=0`
+- **Ollama** (NUMA 0): assign to GPU 0 (RTX PRO 4000, 24 GB) via `CUDA_VISIBLE_DEVICES=0`
 - **vLLM** (NUMA 1): assign to GPU 1 (RTX 5060 Ti, 16 GB) via `CUDA_VISIBLE_DEVICES=1`
 - Model size guide for this hardware:
   - Up to ~13B @ Q4 → RTX 5060 Ti alone (16 GB)
-  - Up to ~30B @ Q4 → RTX 3090 alone (24 GB)
+  - Up to ~30B @ Q4 → RTX PRO 4000 alone (24 GB)
   - Up to ~46B @ Q4 → both GPUs (40 GB, cross-NUMA — functional, not optimal)
-- Docker `--gpus device=0` for RTX 3090; `--gpus device=1` for RTX 5060 Ti
+- Docker `--gpus device=0` for RTX PRO 4000; `--gpus device=1` for RTX 5060 Ti
 - nvidia runtime via CDI: `deploy.resources.reservations.devices[0].capabilities: [gpu]`
 
 ---

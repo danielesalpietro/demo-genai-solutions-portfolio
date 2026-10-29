@@ -24,9 +24,9 @@ INFERENCE_BACKEND="${INFERENCE_BACKEND:-ollama}"
 
 case "$INFERENCE_BACKEND" in
   ollama)
-    GPU_TIER="${GPU_TIER:-rtx3090}"
+    GPU_TIER="${GPU_TIER:-pro4000}"
     case "$GPU_TIER" in
-      rtx3090)   OLLAMA_MODEL="llava:13b-v1.6-vicuna-q4_K_M" ;;
+      pro4000)   OLLAMA_MODEL="llava:13b-v1.6-vicuna-q4_K_M" ;;
       rtx5060ti) OLLAMA_MODEL="llava:7b-v1.6-mistral-q4_K_M" ;;
       cpu)       OLLAMA_MODEL="llava:7b-v1.6-mistral-q4_K_M" ;;
       *)         OLLAMA_MODEL="llava:13b-v1.6-vicuna-q4_K_M" ;;

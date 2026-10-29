@@ -26,7 +26,7 @@ case "$INFERENCE_BACKEND" in
   ollama)
     GPU_TIER="${GPU_TIER:-rtx5060ti}"
     case "$GPU_TIER" in
-      rtx3090)   OLLAMA_MODEL="mistral-small3.1:24b-instruct-2503-q4_K_M" ;;
+      pro4000)   OLLAMA_MODEL="mistral-small3.1:24b-instruct-2503-q4_K_M" ;;
       rtx5060ti) OLLAMA_MODEL="mistral-nemo:12b-instruct-2407-q4_K_M" ;;
       cpu)       OLLAMA_MODEL="mistral:7b-instruct-q4_K_M" ;;
       *)         OLLAMA_MODEL="mistral-nemo:12b-instruct-2407-q4_K_M" ;;
