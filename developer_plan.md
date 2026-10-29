@@ -238,7 +238,7 @@ Each tier is declared in `package.yaml → spec.inference`.
 |---|---|---|---|---|---|
 | Local CPU | `ollama` | `cpu` | [Ollama](https://github.com/ollama/ollama) | `mistral:7b-instruct-q4_K_M` | CPU, ~8 GB RAM |
 | Local GPU 16 GB | `ollama` | `rtx5060ti` | Ollama | `mistral-nemo:12b-instruct-2407-q4_K_M` | RTX 5060 Ti |
-| Local GPU 24 GB | `ollama` | `rtx3090` | Ollama | `mistral-small3.1:24b-instruct-2503-q4_K_M` | RTX 3090 |
+| Local GPU 24 GB | `ollama` | `pro4000` | Ollama | `mistral-small3.1:24b-instruct-2503-q4_K_M` | RTX PRO 4000 |
 | vLLM + CPU offload | `vllm` | `rtx5060ti` | [vLLM](https://github.com/vllm-project/vllm) `--cpu-offload-gb 8` | `mistralai/Mistral-Small-3.1-24B-Instruct-2503` | RTX 5060 Ti + 32 GB RAM |
 | GPU-as-a-Service API | `api` | _(none)_ | OpenAI-compatible endpoint | `mistral-small-latest` (Mistral AI) | No GPU — API key only |
 
@@ -382,18 +382,18 @@ Other European models available as alternatives:
 
 Non-European models (Llama, Qwen, Gemma) remain listed as alternatives for benchmarking and future use.
 
-**#2 — GPU availability: remote runner with RTX 3090 and RTX 5060 Ti**
+**#2 — GPU availability: remote runner with RTX PRO 4000 and RTX 5060 Ti**
 
 A remote GPU runner is available with two selectable GPUs:
 
 | GPU | Architecture | vRAM | CUDA | Best for |
 |---|---|---|---|---|
-| NVIDIA RTX 3090 | Ampere (GA102) | 24 GB GDDR6X | 8.6 | Large models (Mistral Small 24B FP16, Mixtral 8x7B); multi-agent demos; ManiSkill parallel simulation |
+| NVIDIA RTX PRO 4000 | Ampere (GA102) | 24 GB GDDR6X | 8.6 | Large models (Mistral Small 24B FP16, Mixtral 8x7B); multi-agent demos; ManiSkill parallel simulation |
 | NVIDIA RTX 5060 Ti | Blackwell (GB206) | 16 GB GDDR7 | 12.8+ | Fast inference with Mistral NeMo 12B or Mistral 7B; high memory bandwidth for vision tasks |
 
 **Model assignment by GPU:**
 
-| Model | RTX 3090 (24 GB) | RTX 5060 Ti (16 GB) |
+| Model | RTX PRO 4000 (24 GB) | RTX 5060 Ti (16 GB) |
 |---|---|---|
 | Mistral Small 3.1 24B Q4_K_M (~13 GB) | ✓ optimal | ✓ |
 | Mistral Small 3.1 24B FP16 (~46 GB) | ✗ (OOM) | ✗ (OOM) |
@@ -404,5 +404,5 @@ A remote GPU runner is available with two selectable GPUs:
 | ManiSkill GPU parallel (embodied-ai) | ✓ primary | ✓ (fewer envs) |
 
 **GPU selection guidance:**
-- Use **RTX 3090** for: `embodied-ai` (GPU-parallel simulation), `video-intelligence` (LLaVA large context), any demo requiring Mistral Small 24B
+- Use **RTX PRO 4000** for: `embodied-ai` (GPU-parallel simulation), `video-intelligence` (LLaVA large context), any demo requiring Mistral Small 24B
 - Use **RTX 5060 Ti** for: standard RAG and agent demos (faster memory bandwidth improves token throughput); `visual-inspection` (GDDR7 benefits real-time inference)

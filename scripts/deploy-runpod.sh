@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Deploy a demo package to RunPod.
 # Usage: ./scripts/deploy-runpod.sh <demo-name> [gpu-tier]
-# gpu-tier: rtx3090 (default) | rtx5060ti | cpu
+# gpu-tier: pro4000 (default) | rtx5060ti | cpu
 # Requires: RUNPOD_API_KEY environment variable
 set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 demo="${1:?Usage: $0 <demo-name> [gpu-tier]}"
-gpu_tier="${2:-rtx3090}"
+gpu_tier="${2:-pro4000}"
 template="$root/packages/$demo/runpod/template.json"
 
 [[ -f "$template" ]] || { echo "ERROR: RunPod template not found: $template"; exit 1; }
@@ -14,10 +14,10 @@ template="$root/packages/$demo/runpod/template.json"
 
 # Resolve GPU type from tier
 case "$gpu_tier" in
-  rtx3090)   gpu_type="NVIDIA RTX 3090" ;;
+  pro4000)   gpu_type="NVIDIA RTX PRO 4000" ;;
   rtx5060ti) gpu_type="NVIDIA RTX 5060 Ti" ;;
   cpu)       gpu_type="" ;;
-  *)         echo "ERROR: unknown gpu-tier: $gpu_tier (use rtx3090|rtx5060ti|cpu)"; exit 1 ;;
+  *)         echo "ERROR: unknown gpu-tier: $gpu_tier (use pro4000|rtx5060ti|cpu)"; exit 1 ;;
 esac
 
 # Merge GPU type into template and deploy via RunPod API

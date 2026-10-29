@@ -46,7 +46,7 @@ Each demo supports up to **five inference tiers** selected at deploy time via `I
 |---|---|---|---|---|
 | `ollama` | `cpu` | Ollama | `mistral:7b-instruct-q4_K_M` | CPU + ~8 GB RAM |
 | `ollama` | `rtx5060ti` | Ollama | `mistral-nemo:12b-instruct-2407-q4_K_M` | RTX 5060 Ti 16 GB |
-| `ollama` | `rtx3090` | Ollama | `mistral-small3.1:24b-instruct-2503-q4_K_M` | RTX 3090 24 GB |
+| `ollama` | `pro4000` | Ollama | `mistral-small3.1:24b-instruct-2503-q4_K_M` | RTX PRO 4000 24 GB |
 | `vllm` | `rtx5060ti` (+ CPU offload) | vLLM | `mistralai/Mistral-Small-3.1-24B-Instruct-2503` | RTX 5060 Ti + 32 GB RAM |
 | `api` | _(none)_ | Remote API | `mistral-small-latest` (Mistral AI) | No GPU — API key only |
 
@@ -93,7 +93,7 @@ Required secrets per provider:
 
 | `GPU_TIER` | Remote runner | RunPod / Vast.ai equivalents |
 |---|---|---|
-| `rtx3090` | RTX 3090 24 GB | RTX 3090 · A100 80 GB |
+| `pro4000` | RTX PRO 4000 24 GB | RTX PRO 4000 · A100 80 GB |
 | `rtx5060ti` | RTX 5060 Ti 16 GB | RTX 4070 Ti Super · A10 · A6000 |
 | `cpu` | CPU-only | any CPU instance |
 | _(api tier)_ | — | no GPU instance needed |
@@ -103,7 +103,7 @@ Required secrets per provider:
 ```bash
 make package-validate DEMO=private-rag                          # validate package.yaml
 make package-build    DEMO=private-rag                          # build + push image to GHCR
-make deploy-runpod    DEMO=private-rag GPU=rtx3090              # deploy to RunPod
+make deploy-runpod    DEMO=private-rag GPU=pro4000              # deploy to RunPod
 make deploy-vastai    DEMO=private-rag GPU=rtx5060ti            # deploy to Vast.ai
 make cloud-test       DEMO=private-rag PLATFORM=runpod GPU=rtx5060ti  # run automated cloud test
 ```

@@ -15,7 +15,7 @@ spec:
   inference:
     defaultBackend: ollama
     ollama:
-      rtx3090Model: "mistral-small3.1:24b-instruct-2503-q4_K_M"
+      pro4000Model: "mistral-small3.1:24b-instruct-2503-q4_K_M"
       rtx5060tiModel: "mistral-nemo:12b-instruct-2407-q4_K_M"
       cpuModel: "mistral:7b-instruct-q4_K_M"
     vllm:
@@ -34,13 +34,13 @@ spec:
   diskGB: 50
   volumeGB: 30
   runpod:
-    gpuTypes: ["NVIDIA RTX 3090", "NVIDIA RTX 5060 Ti", "NVIDIA A100 80GB PCIe"]
+    gpuTypes: ["NVIDIA RTX PRO 4000", "NVIDIA RTX 5060 Ti", "NVIDIA A100 80GB PCIe"]
     containerDiskGB: 50
     volumeGB: 30
     httpPorts: "3000"
     tcpPorts: "11434,6333,6334"
   vastai:
-    gpuModel: "RTX_3090"
+    gpuModel: "RTX_PRO_4000"
     diskGB: 50
     inetUpMbps: 200
     inetDownMbps: 500

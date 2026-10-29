@@ -3,7 +3,7 @@
 # Usage: ./scripts/test-cloud.sh <demo> <platform> [gpu-tier]
 #   demo      : demo name (must have packages/<demo>/ and demos/<demo>/test.sh)
 #   platform  : runpod | vastai
-#   gpu-tier  : rtx3090 | rtx5060ti | cpu  (default: rtx5060ti)
+#   gpu-tier  : pro4000 | rtx5060ti | cpu  (default: rtx5060ti)
 #
 # Env vars required (per platform):
 #   RunPod  : RUNPOD_API_KEY
@@ -59,7 +59,7 @@ deploy_instance() {
       # Resolve GPU type
       local gpu_type=""
       case "$gpu_tier" in
-        rtx3090)   gpu_type="NVIDIA RTX 3090" ;;
+        pro4000)   gpu_type="NVIDIA RTX PRO 4000" ;;
         rtx5060ti) gpu_type="NVIDIA RTX 5060 Ti" ;;
         cpu)       gpu_type="" ;;
       esac
